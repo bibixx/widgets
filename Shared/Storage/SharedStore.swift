@@ -10,8 +10,18 @@ enum SharedStore {
     let schema = Schema(versionedSchema: CardsSchemaV1.self)
     let configuration = inMemory
       ? ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
-      : ModelConfiguration(schema: schema, groupContainer: .identifier(appGroup))
+      : ModelConfiguration(schema: schema, url: try storeURL())
     return try ModelContainer(for: schema, migrationPlan: CardsMigrationPlan.self, configurations: [configuration])
+  }
+
+  /// `<App Group>/Library/Application Support/Cards.store`; the folder is created on first use
+  /// (Core Data won't create it inside a fresh group container).
+  static func storeURL() throws -> URL {
+    let base = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroup)
+      ?? URL.applicationSupportDirectory
+    let directory = base.appending(path: "Library/Application Support", directoryHint: .isDirectory)
+    try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+    return directory.appending(path: "Cards.store")
   }
 
   static func fetchCards(in context: ModelContext) throws -> [Card] {
