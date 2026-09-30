@@ -24,7 +24,6 @@ Debug launch arguments: `-seed-samples` fills an empty store with made-up cards,
 - `Cards/` app: card list, editor with a live preview of every option, checkout view
 - `CardsWidget/` widget extension: card picker, timelines, refresh button
 - `Shared/` compiled into both: model, storage, barcode engine (zxing-cpp), TOTP/Żappka, `CardView`
-- `plans/` the staged plan; `plans/reference/` holds screenshots with real card numbers and is git-ignored
 
 ## Where data lives
 

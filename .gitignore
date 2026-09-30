@@ -4,6 +4,7 @@
 xcuserdata/
 DerivedData/
 build/
+build-device/
 .swiftpm/
 .build/
 
@@ -13,6 +14,4 @@ local.yml
 # macOS
 .DS_Store
 
-# Reference screenshots show real card numbers
-plans/reference/
 .claude/
