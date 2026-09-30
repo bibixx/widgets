@@ -15,3 +15,4 @@ local.yml
 
 # Reference screenshots show real card numbers
 plans/reference/
+.claude/

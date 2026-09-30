@@ -6,7 +6,7 @@ This is the entry point. Each stage has its own detailed plan in this folder. Wo
 
 Put loyalty-card barcodes, including Żappka's rotating TOTP code, on the iPhone Home Screen as **native WidgetKit widgets**, with a native editor to create them.
 
-This is **its own product**. It doesn't import, read, generate or stay compatible with anything from the earlier attempts (`~/Projects/widgy`, `~/Projects/widgets`). Cards are created fresh in the app. What was learned back then (the Żappka payload format, the brand colours) is written into these plans as plain facts. No stage opens those repos.
+This is **its own product**. It doesn't import, read, generate or stay compatible with anything from the earlier attempts (`~/Projects/widgy`, `~/Projects/widgets`). Cards are created fresh in the app. What was learned back then (the Żappka payload format, the brand colours) is written into these plans as plain facts. The one exception: the brand logo PNGs were copied once from `~/Projects/widgets/public/logo/` into the asset catalog.
 
 **Goal:** a native SwiftUI app with real WidgetKit widgets. No server, no JS engine, no third-party widget host. It has an editor with a **live preview of every option while editing**, presets for the common cards, and Żappka.
 

@@ -13,7 +13,7 @@ Shared/Model/CardLogo.swift
 Shared/Model/Presets.swift
 Shared/Storage/SharedStore.swift        # ModelContainer factory (App Group)
 Shared/Storage/SecretStore.swift        # Keychain wrapper
-Shared/Resources/Logos.xcassets         # zappka, biedronka, rossmann, parkrun, empik (vector PDF/SVG where possible, see below)
+Shared/Resources/Logos.xcassets         # zappka, biedronka, rossmann, parkrun, empik (white PNGs from ~/Projects/widgets/public/logo)
 CardsTests/ModelTests.swift
 CardsTests/SecretStoreTests.swift
 ```
@@ -51,7 +51,7 @@ A **value snapshot** `CardSnapshot: Sendable, Hashable` (all fields plus the res
 ## `Presets.swift`
 Built-in starting points. The colours are the brands' own (listed in the master plan's known facts).
 
-**Logos:** add each brand logo to `Logos.xcassets` as a vector (single-scale PDF or SVG, "Preserve Vector Data") so it's crisp at every widget size. Find official brand assets fresh; don't copy files from the old repos.
+**Logos:** the white-on-transparent brand PNGs from `~/Projects/widgets/public/logo/` (the user's own, the ones their widgy cards used), copied once into `Logos.xcassets`. Nothing reads the old repo at runtime.
 
 | id | name | color1 | color2 | logo | content | symbology |
 |---|---|---|---|---|---|---|
