@@ -6,16 +6,18 @@ import WidgetKit
 struct CardView: View {
   let card: CardSnapshot
   let family: CardFamily
+  private var shown: CardSnapshot { card.rendered(for: family) }
   /// The moment to render (timeline entry date / TimelineView tick). Never `Date()` inside.
   let date: Date
   var renderingMode: CardRenderingMode = .fullColor
 
   var body: some View {
     GeometryReader { proxy in
-      let metrics = CardLayout.metrics(for: family, size: proxy.size, symbology: card.symbology, logo: card.logo)
+      let shown = self.shown
+      let metrics = CardLayout.metrics(for: family, size: proxy.size, symbology: shown.symbology, logo: card.logo)
       ZStack(alignment: .topLeading) {
         header(metrics)
-        CodeArea(card: card, code: CardCode.resolve(card, at: date), metrics: metrics, renderingMode: renderingMode)
+        CodeArea(card: shown, code: CardCode.resolve(shown, at: date), metrics: metrics, renderingMode: renderingMode)
       }
     }
     .background(bodyBackground)
@@ -64,7 +66,7 @@ struct CardView: View {
   private var logoAlignment: Alignment { centersLogo ? .center : .leading }
 
   private var accessibilityLabel: String {
-    card.isZappka ? "\(card.name) card, rotating code" : "\(card.name) card, \(card.symbology.displayName)"
+    card.isZappka ? "\(card.name) card, rotating code" : "\(card.name) card, \(shown.symbology.displayName)"
   }
 }
 

@@ -7,7 +7,7 @@ enum CardPreviewFixtures {
 
   static func card(_ preset: Preset, content: CardContent, symbology: Symbology? = nil, secret: String? = nil) -> CardSnapshot {
     CardSnapshot(
-      name: preset.name, presetID: preset.id, symbology: symbology ?? preset.symbology, content: content,
+      name: preset.name, presetID: preset.id, symbology: symbology ?? preset.symbology, squareSymbology: preset.squareSymbology, content: content,
       zappkaSecret: secret, color1Hex: preset.color1Hex, color2Hex: preset.color2Hex, logo: preset.logo)
   }
 

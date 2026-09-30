@@ -40,7 +40,6 @@ enum Symbology: String, Codable, CaseIterable, Identifiable, Sendable {
   }
 
   var isSquare: Bool { kind == .twoD }
-
   /// Linear codes print their digits so a cashier can type them in.
   var showsHumanReadableText: Bool { kind == .linear }
 

@@ -11,6 +11,9 @@ enum CardFamily: String, CaseIterable, Identifiable, Sendable {
     case .large: "Large"
     }
   }
+
+  /// Small and large widgets are (roughly) square and use the card's square code type.
+  var isSquare: Bool { self != .medium }
 }
 
 enum CardRenderingMode: String, CaseIterable, Identifiable, Sendable {

@@ -1,7 +1,9 @@
 import Foundation
 
 enum Zappka {
+  /// Fixed code types: the tills read both. The Żappka app itself shows a QR code.
   static let symbology: Symbology = .pdf417
+  static let squareSymbology: Symbology = .qr
   static let host = "srln.pl"
   static let period: TimeInterval = 30
 

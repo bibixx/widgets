@@ -14,7 +14,10 @@ enum CardsSchemaV1: VersionedSchema {
     @Attribute(.unique) var id: UUID
     var name: String
     var presetID: String?
+    /// Code type on the horizontal (medium) widget.
     var symbologyRaw: String
+    /// Code type on the square (small, large) widgets.
+    var squareSymbologyRaw: String
     var contentKind: String
     var rawData: String
     var zappkaUserId: String
@@ -32,7 +35,8 @@ enum CardsSchemaV1: VersionedSchema {
       id: UUID = UUID(),
       name: String = "",
       presetID: String? = nil,
-      symbology: Symbology = .pdf417,
+      symbology: Symbology = .code128,
+      squareSymbology: Symbology = .qr,
       content: CardContent = .raw(""),
       color1Hex: String = "#ff00ff",
       color2Hex: String = "#ff0000",
@@ -45,6 +49,7 @@ enum CardsSchemaV1: VersionedSchema {
       self.name = name
       self.presetID = presetID
       self.symbologyRaw = symbology.rawValue
+      self.squareSymbologyRaw = squareSymbology.rawValue
       self.contentKind = CardContent.Kind.raw.rawValue
       self.rawData = ""
       self.zappkaUserId = ""
@@ -67,6 +72,11 @@ extension Card {
   var symbology: Symbology {
     get { Symbology(rawValue: symbologyRaw) ?? .pdf417 }
     set { symbologyRaw = newValue.rawValue }
+  }
+
+  var squareSymbology: Symbology {
+    get { Symbology(rawValue: squareSymbologyRaw) ?? .qr }
+    set { squareSymbologyRaw = newValue.rawValue }
   }
 
   /// Setting the content keeps the other kind's field, so switching back and forth

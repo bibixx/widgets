@@ -12,6 +12,7 @@ final class EditorDraft {
   var name: String
   var presetID: String?
   var symbology: Symbology
+  var squareSymbology: Symbology
   var contentKind: CardContent.Kind
   var rawData: String
   var zappkaUserId: String
@@ -27,6 +28,7 @@ final class EditorDraft {
     name = preset.id == Presets.custom.id ? "" : preset.name
     presetID = preset.id
     symbology = preset.symbology
+    squareSymbology = preset.squareSymbology
     contentKind = preset.contentKind
     rawData = ""
     zappkaUserId = ""
@@ -43,6 +45,7 @@ final class EditorDraft {
     name = card.name
     presetID = card.presetID
     symbology = card.symbology
+    squareSymbology = card.squareSymbology
     contentKind = card.content.kind
     rawData = card.rawData
     zappkaUserId = card.zappkaUserId
@@ -64,12 +67,8 @@ final class EditorDraft {
     color2Hex = preset.color2Hex
     logo = preset.logo
     symbology = preset.symbology
+    squareSymbology = preset.squareSymbology
     contentKind = preset.contentKind
-  }
-
-  func setContentKind(_ kind: CardContent.Kind) {
-    contentKind = kind
-    if kind == .zappka { symbology = Zappka.symbology }
   }
 
   func resetColorsToPreset() {
@@ -98,14 +97,19 @@ final class EditorDraft {
   func snapshot() -> CardSnapshot {
     CardSnapshot(
       id: cardID, name: displayName, presetID: presetID,
-      symbology: contentKind == .zappka ? Zappka.symbology : symbology,
+      symbology: symbology, squareSymbology: squareSymbology,
       content: content, zappkaSecret: contentKind == .zappka ? credentials.secretHex : nil,
       color1Hex: color1Hex, color2Hex: color2Hex, logo: logo, showsCaption: showsCaption, isPreview: true)
   }
 
   // MARK: Validation
 
-  var rawValidation: ValidationResult { BarcodeValidation.validate(rawData, for: symbology) }
+  /// The number must suit both code types; the first error wins, else the horizontal result.
+  var rawValidation: ValidationResult {
+    let horizontal = BarcodeValidation.validate(rawData, for: symbology)
+    let square = BarcodeValidation.validate(rawData, for: squareSymbology)
+    return square.isError && !horizontal.isError ? square : horizontal
+  }
   var credentialIssues: [ZappkaCredentials.Issue] { credentials.validate() }
 
   var colorIssues: [String] {
@@ -137,6 +141,7 @@ final class EditorDraft {
     card.name = displayName
     card.presetID = presetID
     card.symbology = contentKind == .zappka ? Zappka.symbology : symbology
+    card.squareSymbology = contentKind == .zappka ? Zappka.squareSymbology : squareSymbology
     card.content = content
     // Keep the other kind's field too, so switching kinds later doesn't lose it.
     card.rawData = BarcodeValidation.normalized(rawData, for: symbology)

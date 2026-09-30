@@ -67,12 +67,27 @@ struct EditorDraftTests {
     #expect(draft.name == "My card", "a custom name is kept")
   }
 
-  @Test func zappkaForcesPDF417() {
+  @Test func zappkaCodeTypesAreFixed() {
     let draft = EditorDraft(preset: Presets.custom)
-    draft.symbology = .qr
-    draft.setContentKind(.zappka)
-    #expect(draft.symbology == .pdf417)
-    #expect(draft.snapshot().symbology == .pdf417)
+    #expect((draft.symbology, draft.squareSymbology) == (.code128, .qr), "custom default")
+    draft.apply(Presets.zappka)
+    draft.symbology = .code128
+    draft.squareSymbology = .aztec
+    let snapshot = draft.snapshot()
+    #expect(snapshot.rendered(for: .medium).symbology == .pdf417)
+    #expect(snapshot.rendered(for: .small).symbology == .qr)
+    #expect(snapshot.rendered(for: .large).symbology == .qr)
+  }
+
+  @Test func squareFamiliesUseSquareType() {
+    let draft = EditorDraft(preset: Presets.rossmann)
+    draft.rawData = "0491118882945"
+    let snapshot = draft.snapshot()
+    #expect(snapshot.rendered(for: .medium).symbology == .code128)
+    #expect(snapshot.rendered(for: .small).symbology == .qr)
+    draft.squareSymbology = .ean13
+    draft.rawData = "ABC"
+    #expect(draft.rawValidation.isError, "the number must suit the square type too")
   }
 
   @Test func errorsBlockSave() {

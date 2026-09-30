@@ -41,16 +41,17 @@ struct CardViewRenderTests {
       "zappkaBarcode": CardPreviewFixtures.zappkaBarcode, "biedronka": CardPreviewFixtures.biedronka,
       "parkrun": CardPreviewFixtures.parkrun, "custom": CardPreviewFixtures.custom,
     ][name]!
-    guard case .code(let text, _, _) = CardCode.resolve(card, at: CardPreviewFixtures.fixedDate) else {
-      Issue.record("no code"); return
-    }
     let sizes: [(CardFamily, CGSize)] = [(.small, CGSize(width: 158, height: 158)), (.medium, Self.medium), (.large, CGSize(width: 338, height: 354))]
     for (family, size) in sizes {
+      let shown = card.rendered(for: family)
+      guard case .code(let text, _, _) = CardCode.resolve(shown, at: CardPreviewFixtures.fixedDate) else {
+        Issue.record("no code"); return
+      }
       for mode in [CardRenderingMode.fullColor, .accented] {
         let image = try #require(Self.render(card, family: family, size: size, mode: mode))
         Self.dump(image, "\(name)-\(family.rawValue)-\(mode.rawValue)")
         let decoded = BarcodeDecoder.decode(image)
-        #expect(decoded.contains { BarcodeDecoder.matches($0, text: text, symbology: card.symbology) },
+        #expect(decoded.contains { BarcodeDecoder.matches($0, text: text, symbology: shown.symbology) },
                 "\(name) \(family) \(mode): \(decoded)")
       }
     }

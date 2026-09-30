@@ -25,7 +25,7 @@ struct CardsApp: App {
     guard (try? context.fetchCount(FetchDescriptor<Card>())) == 0 else { return }
     for (index, sample) in CardPreviewFixtures.all.enumerated() {
       let card = Card(
-        name: sample.name, presetID: sample.presetID, symbology: sample.symbology, content: sample.content,
+        name: sample.name, presetID: sample.presetID, symbology: sample.symbology, squareSymbology: sample.squareSymbology, content: sample.content,
         color1Hex: sample.color1Hex, color2Hex: sample.color2Hex, logo: sample.logo, sortIndex: index)
       context.insert(card)
       if let secret = sample.zappkaSecret { try? SecretStore().setZappkaSecret(secret, for: card.id) }
