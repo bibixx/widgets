@@ -23,7 +23,6 @@ struct CardLayoutTests {
     case .small: CGSize(width: 158, height: 158)
     case .medium: Self.medium
     case .large: CGSize(width: 338, height: 354)
-    case .fullscreen: CGSize(width: 393, height: 700)
     }
     for symbology in Symbology.allCases {
       let m = CardLayout.metrics(for: family, size: size, symbology: symbology)

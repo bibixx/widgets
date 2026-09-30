@@ -93,9 +93,9 @@ struct EditorDraftTests {
     let router = Router()
     let id = UUID()
     router.open(Router.url(for: id))
-    #expect(router.checkoutCardID == id)
-    router.open(Router.url(for: id, edit: true))
-    #expect(router.checkoutCardID == nil)
     if case .existing(let editID) = router.editing { #expect(editID == id) } else { Issue.record("not editing") }
+    router.editing = nil
+    router.open(URL(string: "cards://card/\(id.uuidString)/edit")!)
+    if case .existing(let editID) = router.editing { #expect(editID == id) } else { Issue.record("legacy link not editing") }
   }
 }

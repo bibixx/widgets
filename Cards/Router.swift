@@ -15,25 +15,18 @@ final class Router {
     }
   }
 
-  /// The card shown in the fullscreen checkout view.
-  var checkoutCardID: UUID?
   var editing: Editing?
   var choosingPreset = false
 
-  /// `cards://card/<uuid>` → checkout, `cards://card/<uuid>/edit` → editor.
+  /// `cards://card/<uuid>` → editor. The older `…/edit` form (widgets placed before the
+  /// checkout view was removed) is accepted too.
   func open(_ url: URL) {
     guard url.scheme == "cards", url.host() == "card" else { return }
     let parts = url.pathComponents.filter { $0 != "/" }
     guard let first = parts.first, let id = UUID(uuidString: first) else { return }
-    editing = nil
     choosingPreset = false
-    if parts.dropFirst().first == "edit" {
-      checkoutCardID = nil
-      editing = .existing(id)
-    } else {
-      checkoutCardID = id
-    }
+    editing = .existing(id)
   }
 
-  static func url(for cardID: UUID, edit: Bool = false) -> URL { DeepLink.card(cardID, edit: edit) }
+  static func url(for cardID: UUID) -> URL { DeepLink.card(cardID) }
 }

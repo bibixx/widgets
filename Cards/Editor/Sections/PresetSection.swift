@@ -28,8 +28,6 @@ struct PresetSection: View {
       }
     } header: {
       Text("Preset")
-    } footer: {
-      Text("Sets colours, logo and code type. Your card number is kept.")
     }
   }
 }

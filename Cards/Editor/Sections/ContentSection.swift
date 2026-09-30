@@ -8,22 +8,12 @@ struct ContentSection: View {
 
   var body: some View {
     Section {
-      Picker("Content", selection: Binding(get: { draft.contentKind }, set: { draft.setContentKind($0) })) {
-        Text("Card number").tag(CardContent.Kind.raw)
-        Text("Żappka (rotating)").tag(CardContent.Kind.zappka)
-      }
-      .pickerStyle(.segmented)
-
       switch draft.contentKind {
       case .raw: raw
       case .zappka: zappka
       }
     } header: {
-      Text("Content")
-    } footer: {
-      if draft.contentKind == .zappka {
-        Text("Stored in the Keychain on this device only.")
-      }
+      Text(draft.contentKind == .zappka ? "Żappka account" : "Card number")
     }
   }
 
@@ -55,24 +45,16 @@ struct ContentSection: View {
   }
 
   @ViewBuilder private var zappka: some View {
-    HStack {
-      TextField("User ID", text: $draft.zappkaUserId)
-        .textInputAutocapitalization(.never)
-        .autocorrectionDisabled()
-        .font(.body.monospaced())
-      PasteButton(payloadType: String.self) { strings in
-        guard let value = strings.first else { return }
-        Task { @MainActor in draft.zappkaUserId = value.trimmingCharacters(in: .whitespacesAndNewlines) }
-      }
-      .labelStyle(.iconOnly)
-      .buttonBorderShape(.circle)
-    }
+    TextField("User ID", text: $draft.zappkaUserId)
+      .textInputAutocapitalization(.never)
+      .autocorrectionDisabled()
+      .font(.body.monospaced())
     HStack {
       Group {
         if revealsSecret {
-          TextField("Secret (hex)", text: $draft.zappkaSecret)
+          TextField("Secret", text: $draft.zappkaSecret)
         } else {
-          SecureField("Secret (hex)", text: $draft.zappkaSecret)
+          SecureField("Secret", text: $draft.zappkaSecret)
         }
       }
       .textInputAutocapitalization(.never)
@@ -85,28 +67,9 @@ struct ContentSection: View {
       }
       .buttonStyle(.borderless)
       .accessibilityLabel(revealsSecret ? "Hide secret" : "Show secret")
-      PasteButton(payloadType: String.self) { strings in
-        guard let value = strings.first else { return }
-        Task { @MainActor in draft.zappkaSecret = ZappkaCredentials.normalizeSecret(value) }
-      }
-      .labelStyle(.iconOnly)
-      .buttonBorderShape(.circle)
     }
     ForEach(visibleIssues, id: \.self) { issue in
       FieldMessage(text: issue.message, isError: issue.isError)
-    }
-    if draft.credentials.isValid {
-      TimelineView(.periodic(from: .now, by: 1)) { context in
-        let window = Zappka.window(containing: context.date)
-        LabeledContent("Current code") {
-          HStack(spacing: 8) {
-            Text(Zappka.code(for: draft.credentials, at: context.date) ?? "—").font(.body.monospaced().weight(.semibold))
-            Text("\(Int(window.end.timeIntervalSince(context.date).rounded(.up)))s")
-              .foregroundStyle(.secondary)
-              .monospacedDigit()
-          }
-        }
-      }
     }
   }
 

@@ -6,7 +6,7 @@ struct CardRow: View {
   var body: some View {
     HStack(spacing: 14) {
       TimelineView(.periodic(from: .now, by: card.content.kind == .zappka ? 30 : 3600)) { context in
-        CardView(card: card.snapshot(), family: .medium, date: context.date, showsCountdown: false)
+        CardView(card: card.snapshot(), family: .medium, date: context.date)
           .frame(width: 338, height: 158)
           .scaleEffect(0.3, anchor: .topLeading)
           .frame(width: 101, height: 47, alignment: .topLeading)
@@ -16,9 +16,11 @@ struct CardRow: View {
 
       VStack(alignment: .leading, spacing: 2) {
         Text(card.name).font(.headline)
-        Text(card.content.kind == .zappka ? "Żappka · rotating" : card.symbology.displayName)
-          .font(.subheadline)
+        Text(card.content.kind == .zappka ? card.zappkaUserId : card.rawData)
+          .font(.subheadline.monospaced())
           .foregroundStyle(.secondary)
+          .lineLimit(1)
+          .truncationMode(.middle)
       }
       Spacer(minLength: 0)
     }

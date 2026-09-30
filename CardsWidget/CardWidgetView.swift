@@ -9,16 +9,14 @@ struct CardWidgetView: View {
   var body: some View {
     content
       .containerBackground(.white, for: .widget)
-      .widgetURL(entry.card.map { DeepLink.card($0.id, edit: entry.state == .needsSecret) } ?? URL(string: "cards://")!)
+      .widgetURL(entry.card.map { DeepLink.card($0.id) } ?? URL(string: "cards://")!)
   }
 
   @ViewBuilder private var content: some View {
     switch entry.state {
     case .ok:
       if let card = entry.card {
-        CardView(
-          card: card, family: family, date: entry.date, renderingMode: renderingMode,
-          headerAccessory: showsRefresh(card) ? AnyView(refreshButton) : nil)
+        CardView(card: card, family: family, date: entry.date, renderingMode: renderingMode)
       }
     case .noCards:
       message("Open Cards to add a card", symbol: "plus.rectangle.on.rectangle")
@@ -27,22 +25,9 @@ struct CardWidgetView: View {
     case .needsSecret:
       if let card = entry.card {
         // Header stays recognisable; the code area explains what's missing.
-        CardView(card: card, family: family, date: entry.date, renderingMode: renderingMode, showsCountdown: false)
+        CardView(card: card, family: family, date: entry.date, renderingMode: renderingMode)
       }
     }
-  }
-
-  private func showsRefresh(_ card: CardSnapshot) -> Bool {
-    card.isZappka && widgetFamily != .systemSmall
-  }
-
-  private var refreshButton: some View {
-    Button(intent: RefreshIntent()) {
-      Image(systemName: "arrow.clockwise")
-        .font(.system(size: 13, weight: .semibold))
-        .foregroundStyle(.white.opacity(0.66))
-    }
-    .buttonStyle(.plain)
   }
 
   private func message(_ text: String, symbol: String) -> some View {

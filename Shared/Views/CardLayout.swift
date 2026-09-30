@@ -2,14 +2,13 @@ import CoreGraphics
 import UIKit
 
 enum CardFamily: String, CaseIterable, Identifiable, Sendable {
-  case small, medium, large, fullscreen
+  case small, medium, large
   var id: String { rawValue }
   var displayName: String {
     switch self {
     case .small: "Small"
     case .medium: "Medium"
     case .large: "Large"
-    case .fullscreen: "Fullscreen"
     }
   }
 }
@@ -83,7 +82,7 @@ enum CardLayout {
     switch family {
     case .medium: size
     case .small: CGSize(width: size.height / Reference.aspect, height: size.height)
-    case .large, .fullscreen: CGSize(width: size.width, height: size.width * Reference.aspect)
+    case .large: CGSize(width: size.width, height: size.width * Reference.aspect)
     }
   }
 

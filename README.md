@@ -17,12 +17,12 @@ xcodebuild -scheme Cards -destination 'platform=iOS Simulator,name=iPhone 17 Pro
 Signing: set `DEVELOPMENT_TEAM` in the environment before `xcodegen generate` (never committed).
 
 Debug launch arguments: `-seed-samples` fills an empty store with made-up cards,
-`-open cards://card/<id>[/edit]` routes a deep link.
+`-open cards://card/<id>` routes a deep link.
 
 ## Layout
 
-- `Cards/` app: card list, editor with a live preview of every option, checkout view
-- `CardsWidget/` widget extension: card picker, timelines, refresh button
+- `Cards/` app: card list, editor with a live preview of every option
+- `CardsWidget/` widget extension: card picker, timelines
 - `Shared/` compiled into both: model, storage, barcode engine (zxing-cpp), TOTP/Żappka, `CardView`
 
 ## Where data lives

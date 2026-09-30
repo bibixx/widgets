@@ -1,7 +1,7 @@
 import SwiftUI
 import WidgetKit
 
-/// The one visual for a card: widgets, the editor's live preview and the checkout view.
+/// The one visual for a card: widgets, the card list and the editor's live preview.
 /// Design: see CardLayout (measured from the user's cards).
 struct CardView: View {
   let card: CardSnapshot
@@ -9,9 +9,6 @@ struct CardView: View {
   /// The moment to render (timeline entry date / TimelineView tick). Never `Date()` inside.
   let date: Date
   var renderingMode: CardRenderingMode = .fullColor
-  var showsCountdown = true
-  /// Extra header content before the countdown (the widget's refresh button).
-  var headerAccessory: AnyView?
 
   var body: some View {
     GeometryReader { proxy in
@@ -39,10 +36,6 @@ struct CardView: View {
           .offset(y: metrics.logoOffsetY)
           .frame(maxWidth: centersLogo ? .infinity : nil, alignment: .center)
         if !centersLogo { Spacer(minLength: 0) }
-        if let headerAccessory { headerAccessory }
-        if showsZappkaCountdown {
-          ZappkaCountdown(date: date, fontSize: countdownFontSize(metrics))
-        }
       }
       .padding(.leading, centersLogo ? 0 : metrics.logoLeading)
       .padding(.trailing, metrics.countdownTrailing)
@@ -67,49 +60,18 @@ struct CardView: View {
     }
   }
 
-  private var showsZappkaCountdown: Bool { showsCountdown && card.isZappka }
-
-  /// Small widgets without a countdown centre the logo, like the original small cards.
-  private var centersLogo: Bool { family == .small && !showsZappkaCountdown && headerAccessory == nil }
+  /// Small widgets centre the logo, like the original small cards.
+  private var centersLogo: Bool { family == .small }
   private var logoAlignment: Alignment { centersLogo ? .center : .leading }
 
-  private func countdownFontSize(_ metrics: CardLayout.Metrics) -> CGFloat {
-    // `.body` (17 pt) on a medium widget; scales with the header on other sizes.
-    min(17, metrics.headerHeight * 0.45) * (family == .fullscreen ? 1.3 : 1)
-  }
-
   private var accessibilityLabel: String {
-    if card.isZappka {
-      let left = Int(Zappka.window(containing: date).end.timeIntervalSince(date).rounded(.up))
-      return "\(card.name) card, rotating code, \(left) seconds left"
-    }
-    return "\(card.name) card, \(card.symbology.displayName)"
+    card.isZappka ? "\(card.name) card, rotating code" : "\(card.name) card, \(card.symbology.displayName)"
   }
 }
 
 extension Color {
   /// Stand-in for the Home Screen tint when previewing the tinted mode.
   static let accentPreviewTint = Color(red: 0.55, green: 0.7, blue: 0.95)
-}
-
-/// "0:17" until the code rotates; ticks live in widgets without timeline reloads.
-struct ZappkaCountdown: View {
-  let date: Date
-  var fontSize: CGFloat = 17
-
-  var body: some View {
-    let window = Zappka.window(containing: date)
-    // Timer text in widgets reports an unbounded ideal width (it reserves room for any
-    // duration), so `.fixedSize()` breaks the layout and the widget renders blank.
-    // Give it an explicit width for "0:30" instead.
-    Text(timerInterval: date...window.end, countsDown: true)
-      .font(.system(size: fontSize, weight: .semibold, design: .monospaced))
-      .monospacedDigit()
-      .multilineTextAlignment(.trailing)
-      .foregroundStyle(.white.opacity(0.66))
-      .lineLimit(1)
-      .frame(width: CardLayout.monospacedAdvance(fontSize: fontSize) * 4 + 2, alignment: .trailing)
-  }
 }
 
 struct LogoView: View {

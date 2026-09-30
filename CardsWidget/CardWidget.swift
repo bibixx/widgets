@@ -7,7 +7,7 @@ struct CardWidget: Widget {
       CardWidgetView(entry: entry)
     }
     .configurationDisplayName("Loyalty card")
-    .description("Shows a card's barcode. Żappka codes rotate every 30 seconds.")
+    .description("Shows a card's barcode.")
     .supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
     // The header runs edge to edge.
     .contentMarginsDisabled()

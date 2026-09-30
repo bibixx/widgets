@@ -41,7 +41,6 @@ struct WidgetSizes: Sendable {
     case .small: small
     case .medium: medium
     case .large: large
-    case .fullscreen: CGSize(width: medium.width, height: medium.width * 1.6)
     }
   }
 }

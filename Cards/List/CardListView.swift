@@ -37,9 +37,6 @@ struct CardListView: View {
     .sheet(item: $router.editing) { editing in
       editor(for: editing)
     }
-    .fullScreenCover(isPresented: checkoutBinding) {
-      CardFullscreenView(cards: cards, selection: $router.checkoutCardID)
-    }
     .confirmationDialog(
       "Delete \(pendingDelete?.name ?? "card")?", isPresented: deleteBinding, titleVisibility: .visible
     ) {
@@ -56,18 +53,15 @@ struct CardListView: View {
     List {
       ForEach(cards) { card in
         Button {
-          router.checkoutCardID = card.id
+          router.editing = .existing(card.id)
         } label: {
           CardRow(card: card)
         }
         .foregroundStyle(.primary)
         .swipeActions(edge: .trailing) {
           Button("Delete", systemImage: "trash", role: .destructive) { pendingDelete = card }
-          Button("Edit", systemImage: "pencil") { router.editing = .existing(card.id) }
-            .tint(.blue)
         }
         .contextMenu {
-          Button("Edit", systemImage: "pencil") { router.editing = .existing(card.id) }
           Button("Delete", systemImage: "trash", role: .destructive) { pendingDelete = card }
         }
       }
@@ -97,10 +91,6 @@ struct CardListView: View {
     }
     try? context.save()
     WidgetReloader.reloadAll()
-  }
-
-  private var checkoutBinding: Binding<Bool> {
-    Binding(get: { router.checkoutCardID != nil }, set: { if !$0 { router.checkoutCardID = nil } })
   }
 
   private var deleteBinding: Binding<Bool> {

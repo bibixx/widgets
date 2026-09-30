@@ -4,15 +4,13 @@ import SwiftUI
 /// ticking every second, in any size and rendering mode.
 struct LivePreviewPanel: View {
   enum SizeChoice: String, CaseIterable, Identifiable {
-    case small, medium, large, fullscreen, all
+    case small, medium, large
     var id: String { rawValue }
     var label: String {
       switch self {
       case .small: "S"
       case .medium: "M"
       case .large: "L"
-      case .fullscreen: "Full"
-      case .all: "All"
       }
     }
   }
@@ -40,8 +38,6 @@ struct LivePreviewPanel: View {
         .frame(maxWidth: .infinity)
         .padding(.vertical, 12)
         .background(wallpaperBackground, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
-
-        ScanCheckBadge(snapshot: draft.snapshot(), size: sizes.medium)
       }
       controls
     }
@@ -53,22 +49,9 @@ struct LivePreviewPanel: View {
   @ViewBuilder
   private func preview(snapshot: CardSnapshot, date: Date) -> some View {
     switch sizeChoice {
-    case .all:
-      ScrollView(.horizontal, showsIndicators: false) {
-        HStack(alignment: .top, spacing: 12) {
-          widget(snapshot, .small, date)
-          widget(snapshot, .medium, date)
-          widget(snapshot, .large, date)
-        }
-        .padding(.horizontal, 12)
-      }
-      .frame(height: min(sizes.large.height, 260))
-      .scaleEffectToFit(height: sizes.large.height, into: 260)
     case .small: widget(snapshot, .small, date)
     case .medium: widget(snapshot, .medium, date)
     case .large: widget(snapshot, .large, date).scaleEffectToFit(height: sizes.large.height, into: 280)
-    case .fullscreen:
-      widget(snapshot, .fullscreen, date).scaleEffectToFit(height: sizes.size(for: .fullscreen).height, into: 300)
     }
   }
 
@@ -77,7 +60,7 @@ struct LivePreviewPanel: View {
     return CardView(card: snapshot, family: family, date: date, renderingMode: renderingMode)
       .frame(width: size.width, height: size.height)
       .background(renderingMode == .fullColor ? Color.clear : tintedGlass)
-      .clipShape(RoundedRectangle(cornerRadius: family == .fullscreen ? 0 : 22, style: .continuous))
+      .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
       .shadow(color: .black.opacity(0.15), radius: 6, y: 2)
   }
 
