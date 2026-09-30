@@ -118,8 +118,13 @@ enum BarcodeValidation {
 
   /// UPC-E's check digit is the UPC-A check digit of its expanded form.
   static func upcECheckDigit(_ body: String) -> Int? {
+    upcEExpanded(body).flatMap(checkDigit)
+  }
+
+  /// The 11-digit UPC-A body (no check digit) a 7-digit UPC-E body expands to.
+  static func upcEExpanded(_ body: String) -> String? {
     let d = body.compactMap(\.wholeNumberValue)
-    guard d.count == 7 else { return nil }
+    guard d.count == 7, body.count == 7 else { return nil }
     let ns = d[0], x = Array(d[1...6])
     let expanded: [Int]
     switch x[5] {
@@ -128,7 +133,7 @@ enum BarcodeValidation {
     case 4: expanded = [ns, x[0], x[1], x[2], x[3], 0, 0, 0, 0, 0, x[4]]
     default: expanded = [ns, x[0], x[1], x[2], x[3], x[4], 0, 0, 0, 0, x[5]]
     }
-    return checkDigit(expanded.map(String.init).joined())
+    return expanded.map(String.init).joined()
   }
 
   private static func encodable(_ text: String, _ symbology: Symbology) -> ValidationResult {
