@@ -93,12 +93,14 @@ struct LogoSection: View {
 }
 
 enum LogoImport {
-  /// Downscales to at most 600 px high and re-encodes as PNG (keeps transparency).
-  static func downscaledPNG(_ data: Data, maxHeight: CGFloat = 600) -> Data? {
+  /// Downscales to fit 960×240 px and re-encodes as PNG (keeps transparency). Headers draw
+  /// logos ~30 pt tall; WidgetKit drops any widget holding an image over ~1 MP.
+  static func downscaledPNG(_ data: Data, maxSize: CGSize = CGSize(width: 960, height: 240)) -> Data? {
     guard let image = UIImage(data: data) else { return nil }
+    let pixelWidth = image.size.width * image.scale
     let pixelHeight = image.size.height * image.scale
-    let factor = min(1, maxHeight / max(pixelHeight, 1))
-    let target = CGSize(width: image.size.width * image.scale * factor, height: pixelHeight * factor)
+    let factor = min(1, maxSize.width / max(pixelWidth, 1), maxSize.height / max(pixelHeight, 1))
+    let target = CGSize(width: (pixelWidth * factor).rounded(), height: (pixelHeight * factor).rounded())
     let format = UIGraphicsImageRendererFormat()
     format.scale = 1
     format.opaque = false
