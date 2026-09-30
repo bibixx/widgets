@@ -71,6 +71,15 @@ final class EditorDraft {
     contentKind = preset.contentKind
   }
 
+  /// Fills the card number from a scanned or imported barcode and adopts its code type:
+  /// 2D codes for the square widgets, the rest for the horizontal one.
+  func importCode(_ code: BarcodeDecoder.Detected) {
+    if let symbology = code.symbology {
+      if symbology.kind == .twoD { squareSymbology = symbology } else { self.symbology = symbology }
+    }
+    rawData = code.text
+  }
+
   func resetColorsToPreset() {
     guard let preset else { return }
     color1Hex = preset.color1Hex

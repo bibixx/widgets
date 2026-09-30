@@ -12,6 +12,17 @@ enum Zappka {
     "https://\(host)/view/dashboard?ploy=\(userId)&loyal=\(code)"
   }
 
+  /// The User ID from a Żappka code's payload (`…/dashboard?ploy=<userId>&loyal=…`),
+  /// e.g. read from a screenshot. Also accepts the old `zlgn.pl` host.
+  static func userId(fromPayload payload: String) -> String? {
+    guard let components = URLComponents(string: payload),
+          let host = components.host, [Zappka.host, "zlgn.pl"].contains(host),
+          let userId = components.queryItems?.first(where: { $0.name == "ploy" })?.value,
+          !userId.isEmpty
+    else { return nil }
+    return userId
+  }
+
   static func payload(for creds: ZappkaCredentials, at date: Date) -> String? {
     guard creds.isValid, let secret = creds.secretData else { return nil }
     return payload(userId: creds.userId, code: TOTP(secret: secret, period: period).code(at: date))

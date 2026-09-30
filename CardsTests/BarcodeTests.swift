@@ -175,3 +175,40 @@ struct BarcodeRendererTests {
     #expect(Date().timeIntervalSince(start) < 1)
   }
 }
+
+@MainActor
+struct BarcodeImportTests {
+  /// A "screenshot" with a Code 128 and a QR code side by side, like a loyalty app screen.
+  @Test func detectsEveryCodeWithItsType() throws {
+    let linear = TestDecoder.upscaled(try BarcodeRenderer.matrix(for: "0491118882945", symbology: .code128), scale: 4)
+    let square = TestDecoder.upscaled(try BarcodeRenderer.matrix(for: "https://example.com/card/42", symbology: .qr), scale: 6)
+    let width = linear.width + square.width + 80
+    let height = max(linear.height, square.height) + 80
+    let context = try #require(CGContext(
+      data: nil, width: width, height: height, bitsPerComponent: 8, bytesPerRow: 0,
+      space: CGColorSpaceCreateDeviceGray(), bitmapInfo: CGImageAlphaInfo.none.rawValue))
+    context.setFillColor(gray: 1, alpha: 1)
+    context.fill(CGRect(x: 0, y: 0, width: width, height: height))
+    context.draw(linear, in: CGRect(x: 20, y: 40, width: linear.width, height: linear.height))
+    context.draw(square, in: CGRect(x: linear.width + 60, y: 40, width: square.width, height: square.height))
+    let image = try #require(context.makeImage())
+
+    let found = Set(BarcodeDecoder.detect(in: image))
+    #expect(found == [
+      .init(text: "0491118882945", symbology: .code128),
+      .init(text: "https://example.com/card/42", symbology: .qr),
+    ])
+  }
+
+  @Test func importAdoptsCodeType() {
+    let draft = EditorDraft(preset: Presets.biedronka)
+    draft.importCode(.init(text: "5901234123457", symbology: .ean13))
+    #expect(draft.symbology == .ean13)
+    #expect(draft.rawData == "5901234123457")
+    draft.importCode(.init(text: "https://example.com/42", symbology: .aztec))
+    #expect(draft.squareSymbology == .aztec, "2D codes go to the square widgets")
+    #expect(draft.symbology == .ean13)
+    draft.importCode(.init(text: "ABC", symbology: nil))
+    #expect(draft.symbology == .ean13, "an unknown type keeps the current one")
+  }
+}

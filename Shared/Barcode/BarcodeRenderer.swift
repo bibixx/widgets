@@ -153,7 +153,7 @@ private func makeGrayImage(width: Int, height: Int, draw: (UnsafeMutableBufferPo
   )
 }
 
-private extension Symbology {
+extension Symbology {
   var zxingFormat: ZXIFormat {
     switch self {
     case .pdf417: .PDF_417

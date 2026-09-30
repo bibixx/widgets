@@ -6,6 +6,8 @@ struct CardEditorView: View {
   @Environment(\.dismiss) private var dismiss
   @State var draft: EditorDraft
   @State private var saveError: String?
+  @State private var importer = CodeImporter()
+  @State private var dropTargeted = false
 
   var body: some View {
     NavigationStack {
@@ -15,7 +17,7 @@ struct CardEditorView: View {
           TextField(draft.preset?.name ?? "Card name", text: $draft.name)
             .textInputAutocapitalization(.words)
         }
-        ContentSection(draft: draft)
+        ContentSection(draft: draft, importer: importer)
         CodeTypeSection(draft: draft)
         StyleSection(draft: draft)
         LogoSection(draft: draft)
@@ -23,6 +25,28 @@ struct CardEditorView: View {
       .safeAreaInset(edge: .top, spacing: 0) {
         LivePreviewPanel(draft: draft)
       }
+      // Drop a screenshot (drag its thumbnail) or any image anywhere to read its code.
+      .dropDestination(for: DroppedImage.self) { images, _ in
+        guard let image = images.first else { return false }
+        Task { await importer.importImage(image.data, into: draft) }
+        return true
+      } isTargeted: { dropTargeted = $0 }
+      .overlay {
+        if dropTargeted {
+          RoundedRectangle(cornerRadius: 24, style: .continuous)
+            .strokeBorder(Color.accentColor, style: StrokeStyle(lineWidth: 3, dash: [10, 6]))
+            .background(Color.accentColor.opacity(0.08), in: RoundedRectangle(cornerRadius: 24, style: .continuous))
+            .overlay {
+              Label(draft.contentKind == .zappka ? "Drop to read the Żappka code" : "Drop to read the code", systemImage: "barcode.viewfinder")
+                .font(.headline)
+                .padding(12)
+                .background(.regularMaterial, in: Capsule())
+            }
+            .padding(8)
+            .allowsHitTesting(false)
+        }
+      }
+      .codeImportDialogs(importer, draft: draft)
       .navigationTitle(draft.isNew ? "New Card" : "Edit Card")
       .navigationBarTitleDisplayMode(.inline)
       .toolbar {

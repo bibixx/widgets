@@ -1,10 +1,16 @@
 import CoreGraphics
 import ZXingCpp
 
-/// Reads barcodes back from a rendered image. Used by the editor's "Scan check"
-/// and by tests. zxing's reader rather than Vision, because Vision's barcode
-/// detector returns nothing in the iOS simulator.
+/// Reads barcodes from images: the editor's photo import, and tests reading rendered
+/// cards back. zxing's reader rather than Vision, because Vision's barcode detector
+/// returns nothing in the iOS simulator.
 enum BarcodeDecoder {
+  struct Detected: Hashable, Sendable {
+    let text: String
+    /// Nil when the code is a type cards can't draw.
+    let symbology: Symbology?
+  }
+
   static func decode(_ image: CGImage) -> [String] {
     let options = ZXIReaderOptions()
     options.tryHarder = true
@@ -13,6 +19,23 @@ enum BarcodeDecoder {
     let reader = ZXIBarcodeReader(options: options)
     guard let results = try? reader.read(image) else { return [] }
     return results.map(\.text)
+  }
+
+  /// Every barcode in a photo or screenshot, in any orientation, de-duplicated.
+  static func detect(in image: CGImage) -> [Detected] {
+    let options = ZXIReaderOptions()
+    options.tryHarder = true
+    options.tryRotate = true
+    options.tryInvert = true
+    options.maxNumberOfSymbols = 8
+    let reader = ZXIBarcodeReader(options: options)
+    guard let results = try? reader.read(image) else { return [] }
+    var seen = Set<Detected>()
+    return results.compactMap { result in
+      guard !result.text.isEmpty else { return nil }
+      let detected = Detected(text: result.text, symbology: Symbology.allCases.first { $0.zxingFormat == result.format })
+      return seen.insert(detected).inserted ? detected : nil
+    }
   }
 
   /// Whether a decoded payload is what `text` encodes as `symbology`, allowing for the
