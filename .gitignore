@@ -1,0 +1,17 @@
+# Xcode / XcodeGen
+*.xcodeproj
+*.xcworkspace
+xcuserdata/
+DerivedData/
+build/
+.swiftpm/
+.build/
+
+# Machine-specific signing
+local.yml
+
+# macOS
+.DS_Store
+
+# Reference screenshots show real card numbers
+plans/reference/

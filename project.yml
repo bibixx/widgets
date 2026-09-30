@@ -1,0 +1,121 @@
+name: Cards
+
+options:
+  bundleIdPrefix: io.legiec
+  deploymentTarget:
+    iOS: "26.0"
+  createIntermediateGroups: true
+  developmentLanguage: en
+
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    SWIFT_STRICT_CONCURRENCY: complete
+    DEVELOPMENT_TEAM: ${DEVELOPMENT_TEAM}
+    CODE_SIGN_STYLE: Automatic
+    MARKETING_VERSION: "0.1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    ENABLE_USER_SCRIPT_SANDBOXING: YES
+    TARGETED_DEVICE_FAMILY: "1"
+
+packages:
+  ZXingCpp:
+    url: https://github.com/zxing-cpp/zxing-cpp
+    exactVersion: 3.1.1
+
+targets:
+  Cards:
+    type: application
+    platform: iOS
+    sources:
+      - Cards
+      - Shared
+    dependencies:
+      - target: CardsWidget
+        embed: true
+      - package: ZXingCpp
+    entitlements:
+      path: Cards/Cards.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.io.legiec.cards
+        keychain-access-groups:
+          - $(AppIdentifierPrefix)io.legiec.cards.shared
+    info:
+      path: Cards/Info.plist
+      properties:
+        CFBundleDisplayName: Cards
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        CFBundleURLTypes:
+          - CFBundleURLName: io.legiec.cards
+            CFBundleURLSchemes:
+              - cards
+        KeychainAccessGroup: $(AppIdentifierPrefix)io.legiec.cards.shared
+        NSCameraUsageDescription: Scan the barcode on a physical card to copy its number.
+        NSPhotoLibraryUsageDescription: Pick an image to use as a card logo.
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: io.legiec.cards
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+
+  CardsWidget:
+    type: app-extension
+    platform: iOS
+    sources:
+      - CardsWidget
+      - Shared
+    dependencies:
+      - package: ZXingCpp
+    entitlements:
+      path: CardsWidget/CardsWidget.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.io.legiec.cards
+        keychain-access-groups:
+          - $(AppIdentifierPrefix)io.legiec.cards.shared
+    info:
+      path: CardsWidget/Info.plist
+      properties:
+        CFBundleDisplayName: Cards
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        KeychainAccessGroup: $(AppIdentifierPrefix)io.legiec.cards.shared
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: io.legiec.cards.widget
+
+  CardsTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - CardsTests
+    dependencies:
+      - target: Cards
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: io.legiec.cards.tests
+        TEST_HOST: $(BUILT_PRODUCTS_DIR)/Cards.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Cards
+        BUNDLE_LOADER: $(TEST_HOST)
+        GENERATE_INFOPLIST_FILE: YES
+
+schemes:
+  Cards:
+    build:
+      targets:
+        Cards: all
+        CardsWidget: all
+    test:
+      targets:
+        - CardsTests
+      gatherCoverageData: false
+    run:
+      config: Debug
