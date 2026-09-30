@@ -5,7 +5,7 @@ import WidgetKit
 /// of changes reloads the widgets once.
 @MainActor
 enum WidgetReloader {
-  static let kind = "CardWidget"
+  nonisolated static let kind = "CardWidget"
   private static var pending: Task<Void, Never>?
 
   static func reloadAll() {

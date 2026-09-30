@@ -9,8 +9,8 @@ import UniformTypeIdentifiers
 struct CardViewRenderTests {
   static let medium = CGSize(width: 338, height: 158)
 
-  static func render(_ card: CardSnapshot, family: CardFamily = .medium, size: CGSize = medium, mode: CardRenderingMode = .fullColor) -> CGImage? {
-    let view = CardView(card: card, family: family, date: CardPreviewFixtures.fixedDate, renderingMode: mode)
+  static func render(_ card: CardSnapshot, family: CardFamily = .medium, size: CGSize = medium, mode: CardRenderingMode = .fullColor, date: Date = CardPreviewFixtures.fixedDate) -> CGImage? {
+    let view = CardView(card: card, family: family, date: date, renderingMode: mode)
       .frame(width: size.width, height: size.height)
       .environment(\.displayScale, 3)
     let renderer = ImageRenderer(content: view)

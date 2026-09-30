@@ -35,7 +35,5 @@ final class Router {
     }
   }
 
-  static func url(for cardID: UUID, edit: Bool = false) -> URL {
-    URL(string: "cards://card/\(cardID.uuidString)\(edit ? "/edit" : "")")!
-  }
+  static func url(for cardID: UUID, edit: Bool = false) -> URL { DeepLink.card(cardID, edit: edit) }
 }
