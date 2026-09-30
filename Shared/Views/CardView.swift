@@ -99,13 +99,16 @@ struct ZappkaCountdown: View {
 
   var body: some View {
     let window = Zappka.window(containing: date)
+    // Timer text in widgets reports an unbounded ideal width (it reserves room for any
+    // duration), so `.fixedSize()` breaks the layout and the widget renders blank.
+    // Give it an explicit width for "0:30" instead.
     Text(timerInterval: date...window.end, countsDown: true)
       .font(.system(size: fontSize, weight: .semibold, design: .monospaced))
       .monospacedDigit()
       .multilineTextAlignment(.trailing)
       .foregroundStyle(.white.opacity(0.66))
       .lineLimit(1)
-      .fixedSize()
+      .frame(width: CardLayout.monospacedAdvance(fontSize: fontSize) * 4 + 2, alignment: .trailing)
   }
 }
 

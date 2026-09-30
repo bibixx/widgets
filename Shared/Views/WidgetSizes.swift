@@ -23,7 +23,7 @@ struct WidgetSizes: Sendable {
     "430x932": .init(small: 170, medium: 364, large: 382),  // 14/15 Pro Max, Plus
     "428x926": .init(small: 170, medium: 364, large: 382),  // 12/13 Pro Max
     "414x896": .init(small: 169, medium: 360, large: 379),  // 11, XR, 11 Pro Max
-    "402x874": .init(small: 162, medium: 345, large: 362),  // 16/17 Pro (approximate)
+    "402x874": .init(small: 164.33, medium: 349.67, large: 365),  // 16/17 Pro (measured, simulator)
     "393x852": .init(small: 158, medium: 338, large: 354),  // 14 Pro, 15, 15 Pro, 16
     "390x844": .init(small: 158, medium: 338, large: 354),  // 12, 13, 14
     "375x812": .init(small: 155, medium: 329, large: 345),  // mini, X, XS
