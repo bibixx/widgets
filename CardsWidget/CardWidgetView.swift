@@ -1,3 +1,4 @@
+import AppIntents
 import SwiftUI
 import WidgetKit
 
@@ -7,9 +8,22 @@ struct CardWidgetView: View {
   @Environment(\.widgetRenderingMode) private var widgetRenderingMode
 
   var body: some View {
-    content
+    tappable
       .containerBackground(.white, for: .widget)
       .widgetURL(entry.card.map { DeepLink.card($0.id) } ?? URL(string: "cards://")!)
+  }
+
+  /// With a tap link, the whole widget is a button that opens it straight away (without
+  /// launching Cards first). Otherwise, and while the card needs fixing, the tap opens the editor.
+  @ViewBuilder private var tappable: some View {
+    if entry.state == .ok, let url = entry.card?.tapURL {
+      Button(intent: OpenTapLinkIntent(url: url)) {
+        content.frame(maxWidth: .infinity, maxHeight: .infinity)
+      }
+      .buttonStyle(.plain)
+    } else {
+      content
+    }
   }
 
   @ViewBuilder private var content: some View {

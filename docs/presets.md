@@ -18,6 +18,7 @@ struct Preset {
   let contentKind: CardContent.Kind  // .raw (card number) or .zappka (rotating code)
   let symbology: Symbology        // code on the horizontal (medium) widget
   var squareSymbology = .qr       // code on the square (small, large) widgets
+  var appURL: String? = nil       // widget tap link: a universal link the store's app claims
 }
 ```
 
@@ -51,6 +52,14 @@ sips -g pixelWidth -g pixelHeight Shared/Resources/Logos.xcassets/<id>.imageset/
 ```
 
 `LogoTests` fails for any preset logo over the limit.
+
+### App link (optional)
+
+Find a universal link the store's app claims: fetch
+`https://app-site-association.cdn-apple.com/a/v1/<domain>` for its domains (try `www.`, link
+subdomains and `<brand>.onelink.me` / `<brand>.app.link`) and pick a path listed under
+`applinks`. Test it on a device with the editor's "Widget tap" Try button. Custom schemes
+(`brand://`) work too but fail silently when wrong.
 
 ### 2. Define the preset
 

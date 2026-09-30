@@ -27,6 +27,8 @@ enum CardsSchemaV1: VersionedSchema {
     var logoPresetName: String?
     @Attribute(.externalStorage) var logoImageData: Data?
     var showsCaption: Bool
+    /// What tapping the widget opens (another app's deep link, a web page). Nil opens the editor.
+    var tapURL: String?
     var sortIndex: Int
     var createdAt: Date
     var updatedAt: Date
@@ -42,6 +44,7 @@ enum CardsSchemaV1: VersionedSchema {
       color2Hex: String = "#ff0000",
       logo: CardLogo = .none,
       showsCaption: Bool = true,
+      tapURL: String? = nil,
       sortIndex: Int = 0,
       createdAt: Date = .now
     ) {
@@ -59,6 +62,7 @@ enum CardsSchemaV1: VersionedSchema {
       self.logoPresetName = nil
       self.logoImageData = nil
       self.showsCaption = showsCaption
+      self.tapURL = tapURL
       self.sortIndex = sortIndex
       self.createdAt = createdAt
       self.updatedAt = createdAt

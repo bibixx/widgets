@@ -62,8 +62,10 @@ live preview. Rules that span files:
 **Widget.** `CardWidget` uses `AppIntentConfiguration` with `SelectCardIntent` / `CardEntity`.
 Timeline logic is pure and testable in `CardTimeline.entries` (static cards: one entry, policy
 `.never`; Żappka: one entry per 30 s window for an hour, policy `.atEnd`). The app calls
-`WidgetReloader.reloadAll()` (debounced) after any save/delete/reorder. Tapping a widget opens
-`cards://card/<uuid>`, which `Router` turns into the editor.
+`WidgetReloader.reloadAll()` (debounced) after any save/delete/reorder. Tapping a widget opens the
+card's `tapURL` (another app's deep link or a web page) via `Button(intent: OpenTapLinkIntent(...))` (which hands off to `OpenURLIntent`),
+so Cards doesn't launch first. Without one, or while the card needs fixing, it opens
+`cards://card/<uuid>`, which `Router` turns into the editor. `TapLink` parses what the user types.
 
 **Editor.** `EditorDraft` is an `@Observable` copy of a card plus its secret; Cancel discards it,
 Save writes both the card and the Keychain secret. Switching content kind or preset must keep what

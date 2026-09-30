@@ -27,6 +27,27 @@ struct EditorDraftTests {
     #expect(reloaded.color1Hex == Presets.rossmann.color1Hex)
   }
 
+  @Test func tapURLSavesNormalizedAndBlocksInvalid() throws {
+    let container = try SharedStore.makeContainer(inMemory: true)
+    let context = container.mainContext
+    let draft = EditorDraft(preset: Presets.empik)
+    draft.rawData = "123"
+    #expect(draft.tapURL == Presets.empik.appURL, "new cards start with the preset's link")
+
+    draft.tapURL = "not a link"
+    #expect(!draft.canSave)
+
+    draft.tapURL = " empik.com "
+    #expect(draft.canSave)
+    let card = try draft.save(in: context, secrets: secrets)
+    #expect(card.tapURL == "https://empik.com")
+    #expect(EditorDraft(card: card, secret: nil).tapURL == "https://empik.com")
+
+    draft.tapURL = ""
+    try draft.save(in: context, secrets: secrets)
+    #expect(card.tapURL == nil)
+  }
+
   @Test func zappkaSavesSecretToKeychainNotDB() throws {
     let container = try SharedStore.makeContainer(inMemory: true)
     let context = container.mainContext

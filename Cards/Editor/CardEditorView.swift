@@ -21,6 +21,7 @@ struct CardEditorView: View {
         CodeTypeSection(draft: draft)
         StyleSection(draft: draft)
         LogoSection(draft: draft)
+        TapSection(draft: draft)
       }
       .safeAreaInset(edge: .top, spacing: 0) {
         LivePreviewPanel(draft: draft)

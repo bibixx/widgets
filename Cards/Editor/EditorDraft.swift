@@ -21,6 +21,8 @@ final class EditorDraft {
   var color2Hex: String
   var logo: CardLogo
   var showsCaption: Bool
+  /// What tapping the widget opens, as typed; empty opens the editor.
+  var tapURL: String
 
   init(preset: Preset) {
     cardID = UUID()
@@ -37,6 +39,7 @@ final class EditorDraft {
     color2Hex = preset.color2Hex
     logo = preset.logo
     showsCaption = true
+    tapURL = preset.appURL ?? ""
   }
 
   init(card: Card, secret: String?) {
@@ -54,6 +57,7 @@ final class EditorDraft {
     color2Hex = card.color2Hex
     logo = card.logo
     showsCaption = card.showsCaption
+    tapURL = card.tapURL ?? ""
   }
 
   var preset: Preset? { Presets.preset(id: presetID) }
@@ -62,6 +66,7 @@ final class EditorDraft {
   /// equals the old preset's name follows the new preset.
   func apply(_ preset: Preset) {
     if name.isEmpty || name == self.preset?.name { name = preset.id == Presets.custom.id ? "" : preset.name }
+    if tapURL.isEmpty || tapURL == self.preset?.appURL { tapURL = preset.appURL ?? "" }
     presetID = preset.id
     color1Hex = preset.color1Hex
     color2Hex = preset.color2Hex
@@ -125,10 +130,13 @@ final class EditorDraft {
     [color1Hex, color2Hex].contains { Color.rgb(hex: $0) == nil } ? ["Colours must be #RRGGBB"] : []
   }
 
+  var tapLink: TapLink.Parsed { TapLink.parse(tapURL) }
+
   var hasErrors: Bool {
+    if !colorIssues.isEmpty || tapLink == .invalid { return true }
     switch contentKind {
-    case .raw: rawValidation.isError || !colorIssues.isEmpty
-    case .zappka: credentialIssues.contains(where: \.isError) || !colorIssues.isEmpty
+    case .raw: return rawValidation.isError
+    case .zappka: return credentialIssues.contains(where: \.isError)
     }
   }
 
@@ -159,6 +167,7 @@ final class EditorDraft {
     card.color2Hex = color2Hex
     card.logo = logo
     card.showsCaption = showsCaption
+    if case .url(let url) = tapLink { card.tapURL = url.absoluteString } else { card.tapURL = nil }
     card.updatedAt = .now
     try context.save()
 

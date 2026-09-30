@@ -17,13 +17,15 @@ struct CardSnapshot: Hashable, Sendable, Identifiable {
   var color2Hex: String
   var logo: CardLogo
   var showsCaption: Bool
+  /// Opened by tapping the widget; nil opens the card's editor.
+  var tapURL: URL?
   /// Editor preview: an empty number draws a faded sample instead of an error.
   var isPreview = false
 
   init(
     id: UUID = UUID(), name: String, presetID: String? = nil, symbology: Symbology, squareSymbology: Symbology = .qr, content: CardContent,
     zappkaSecret: String? = nil, color1Hex: String, color2Hex: String, logo: CardLogo,
-    showsCaption: Bool = true, isPreview: Bool = false
+    showsCaption: Bool = true, tapURL: URL? = nil, isPreview: Bool = false
   ) {
     self.id = id
     self.name = name
@@ -36,6 +38,7 @@ struct CardSnapshot: Hashable, Sendable, Identifiable {
     self.color2Hex = color2Hex
     self.logo = logo
     self.showsCaption = showsCaption
+    self.tapURL = tapURL
     self.isPreview = isPreview
   }
 
@@ -43,7 +46,7 @@ struct CardSnapshot: Hashable, Sendable, Identifiable {
     self.init(
       id: card.id, name: card.name, presetID: card.presetID, symbology: card.symbology, squareSymbology: card.squareSymbology, content: card.content,
       zappkaSecret: zappkaSecret, color1Hex: card.color1Hex, color2Hex: card.color2Hex, logo: card.logo,
-      showsCaption: card.showsCaption)
+      showsCaption: card.showsCaption, tapURL: card.tapURL.flatMap(URL.init(string:)))
   }
 
   var color1: Color { Color(hex: color1Hex) }
