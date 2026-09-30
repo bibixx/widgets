@@ -34,12 +34,12 @@ struct CardViewRenderTests {
     #expect(BarcodeDecoder.decode(image).contains { $0 == expected })
   }
 
-  @Test(arguments: ["rossmann", "empik", "zappkaBarcode", "biedronka", "parkrun", "custom"])
+  @Test(arguments: ["rossmann", "empik", "biedronka", "parkrun", "lidl", "custom"])
   func everyFamilyDecodes(_ name: String) throws {
     let card = [
       "rossmann": CardPreviewFixtures.rossmann, "empik": CardPreviewFixtures.empik,
-      "zappkaBarcode": CardPreviewFixtures.zappkaBarcode, "biedronka": CardPreviewFixtures.biedronka,
-      "parkrun": CardPreviewFixtures.parkrun, "custom": CardPreviewFixtures.custom,
+      "biedronka": CardPreviewFixtures.biedronka, "parkrun": CardPreviewFixtures.parkrun,
+      "lidl": CardPreviewFixtures.lidl, "custom": CardPreviewFixtures.custom,
     ][name]!
     let sizes: [(CardFamily, CGSize)] = [(.small, CGSize(width: 158, height: 158)), (.medium, Self.medium), (.large, CGSize(width: 338, height: 354))]
     for (family, size) in sizes {

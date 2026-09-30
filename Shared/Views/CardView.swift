@@ -107,6 +107,10 @@ enum LogoCache {
   CardView(card: CardPreviewFixtures.rossmann, family: .medium, date: CardPreviewFixtures.fixedDate)
 }
 
+#Preview("Lidl", traits: .fixedLayout(width: 338, height: 158)) {
+  CardView(card: CardPreviewFixtures.lidl, family: .medium, date: CardPreviewFixtures.fixedDate)
+}
+
 #Preview("All presets") {
   ScrollView {
     VStack(spacing: 16) {
