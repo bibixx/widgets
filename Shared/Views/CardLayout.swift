@@ -25,34 +25,37 @@ enum CardRenderingMode: String, CaseIterable, Identifiable, Sendable {
   }
 }
 
-/// The widget design, measured from the user's cards (plans/reference, medium size).
-/// All numbers are fractions of the *medium* widget's width (W) and height (H).
-/// Structure and typography follow the old widgets renderer (widgets/app/api/og/Code.tsx):
-/// SF Mono caption in a white box that sits on the code's bottom edge and cuts the bars.
+/// The widget design, ported from the old widgets renderer (widgets/app/api/og/{route,Code}.tsx).
+/// That renderer laid out in CSS px at the device's 3× resolution, so every size here is
+/// its px value ÷ 3, in points, the same on every device. Its 6 px outline is left out:
+/// the Liquid Glass Home Screen already highlights widget edges.
 enum CardLayout {
-  enum Reference {
-    /// Medium widget aspect (H / W) of the reference screenshots, 1395 / 2961.
-    static let aspect: CGFloat = 1395.0 / 2961.0
-    static let headerHeight: CGFloat = 0.241        // × H
-    static let sideInset: CGFloat = 0.065           // × W, logo and code leading edge
-    /// Logo height × header height. Default for custom logos and empik/parkrun; the old
-    /// renderer gave some logos their own `iconHeight`, so those are calibrated per logo
-    /// (Żappka, Rossmann measured; Biedronka from its iconHeight 48 vs the default 64).
-    static let logoHeight: CGFloat = 0.578
-    static let presetLogoHeights: [String: CGFloat] = ["zappka": 0.682, "rossmann": 0.332, "biedronka": 0.434]
-    /// Vertical nudge × header height (negative = up); Żappka sits higher than centred.
-    static let presetLogoOffsets: [String: CGFloat] = ["zappka": -0.048]
-    static let logoMaxWidth: CGFloat = 0.5          // × W
-    static let codeTop: CGFloat = 0.344             // × H
-    static let codeBottom: CGFloat = 0.8968         // × H
-    static let cornerRadius: CGFloat = 0.004        // × W
-    static let captionCapHeight: CGFloat = 0.0473   // × H
-    static let captionAdvance: CGFloat = 0.02363    // × W, per glyph
-    static let captionBaseline: CGFloat = 0.0015    // × H above the code's bottom edge
-    static let notchTop: CGFloat = 0.8301           // × H
-    /// White notch box extends this far past the caption's glyph boxes on each side
-    /// (≈0.031 W past the ink, measured).
-    static let notchPadding: CGFloat = 0.027        // × W
+  enum Style {
+    static let headerHeight: CGFloat = 40                 // 120 px
+    static let smallHeaderHeight: CGFloat = 88.0 / 3      // 88 px
+    static let headerPaddingV: CGFloat = 16.0 / 3         // 16 px
+    static let headerPaddingH: CGFloat = 64.0 / 3         // 64 px
+    static let smallHeaderPaddingH: CGFloat = 16.0 / 3    // 16 px
+    /// `iconHeight ?? 64` px; some presets set their own.
+    static let logoHeight: CGFloat = 64.0 / 3
+    static let presetLogoHeights: [String: CGFloat] = ["zappka": 88.0 / 3, "rossmann": 36.0 / 3, "biedronka": 48.0 / 3]
+    static let codeInset: CGFloat = 16                    // container padding 48 px
+    static let smallCodeInset: CGFloat = 8                // 24 px
+    /// Linear/PDF417 `borderRadius: 40px / 32px` (elliptical).
+    static let codeCornerSize = CGSize(width: 40.0 / 3, height: 32.0 / 3)
+    /// QR/DataMatrix/Aztec `borderRadius: 8px`.
+    static let squareCornerRadius: CGFloat = 8.0 / 3
+    /// SF Mono 30 px, `letterSpacing: .25em`.
+    static let captionFontSize: CGFloat = 10
+    static let captionTracking: CGFloat = 2.5
+    /// Caption ink bottom sits 2 px above the code's bottom edge.
+    static let captionBaseline: CGFloat = 2.0 / 3
+    /// White caption box: `paddingTop 12` + line height `.75em` (measured 34 px).
+    static let notchHeight: CGFloat = 34.0 / 3
+    static let notchSidePadding: CGFloat = 8                // 24 px
+    static let smallNotchSidePadding: CGFloat = 8.0 / 3     // 8 px
+    static let notchMinWidth: CGFloat = 448.0 / 3           // not on small
+    static let notchTopRadius: CGFloat = 4.0 / 3
   }
 
   struct Metrics: Equatable, Sendable {
@@ -60,91 +63,85 @@ enum CardLayout {
     var headerHeight: CGFloat
     var logoLeading: CGFloat
     var logoMaxSize: CGSize
-    var logoOffsetY: CGFloat
-    var countdownTrailing: CGFloat
-    /// The area the code may occupy (linear codes fill it; 2D/stacked codes fit inside it).
+    var headerTrailing: CGFloat
+    /// The padded box the code fills (linear/PDF417) or is centred in (2D).
     var codeArea: CGRect
-    var cornerRadius: CGFloat
+    var codeInset: CGFloat
     var captionFontSize: CGFloat
-    var captionAdvance: CGFloat
+    var captionTracking: CGFloat
     var captionBaseline: CGFloat
-    /// Distance from the code's bottom edge up to the notch top.
+    /// Distance from the code's bottom edge up to the caption box top.
     var notchHeight: CGFloat
-    var notchPadding: CGFloat
+    var notchSidePadding: CGFloat
+    var notchMinWidth: CGFloat
+    var notchTopRadius: CGFloat
 
-    /// The caption's glyph-box width for `count` characters.
-    func captionWidth(characters count: Int) -> CGFloat { CGFloat(count) * captionAdvance }
-  }
+    /// The caption's width for `count` characters, trailing letter-spacing included
+    /// (the old renderer centred it that way).
+    func captionWidth(characters count: Int) -> CGFloat {
+      CGFloat(count) * (CardLayout.monospacedAdvance(fontSize: captionFontSize) + captionTracking)
+    }
 
-  /// The medium widget's size that `size` corresponds to, so every family keeps the same
-  /// absolute header, inset and caption sizes as a medium widget on the same device.
-  static func mediumReference(for family: CardFamily, size: CGSize) -> CGSize {
-    switch family {
-    case .medium: size
-    case .small: CGSize(width: size.height / Reference.aspect, height: size.height)
-    case .large: CGSize(width: size.width, height: size.width * Reference.aspect)
+    /// The white caption box's width.
+    func notchWidth(characters count: Int) -> CGFloat {
+      max(notchMinWidth, captionWidth(characters: count) + 2 * notchSidePadding)
     }
   }
 
-  static func logoHeightFraction(for logo: CardLogo) -> CGFloat {
-    if case .preset(let name) = logo, let fraction = Reference.presetLogoHeights[name] { return fraction }
-    return Reference.logoHeight
-  }
-
-  static func logoOffsetFraction(for logo: CardLogo) -> CGFloat {
-    if case .preset(let name) = logo { return Reference.presetLogoOffsets[name] ?? 0 }
-    return 0
+  static func logoHeight(for logo: CardLogo) -> CGFloat {
+    if case .preset(let name) = logo, let height = Style.presetLogoHeights[name] { return height }
+    return Style.logoHeight
   }
 
   static func metrics(for family: CardFamily, size: CGSize, symbology: Symbology, logo: CardLogo = .none) -> Metrics {
-    let m = mediumReference(for: family, size: size)
-    let W = m.width, H = m.height
-    let header = Reference.headerHeight * H
-    let inset = Reference.sideInset * W
-    let gapAbove = (Reference.codeTop - Reference.headerHeight) * H
-    let gapBelow = (1 - Reference.codeBottom) * H
+    let isSmall = family == .small
+    let header = isSmall ? Style.smallHeaderHeight : Style.headerHeight
+    let padH = isSmall ? Style.smallHeaderPaddingH : Style.headerPaddingH
+    let inset = isSmall ? Style.smallCodeInset : Style.codeInset
+    // The logo keeps its iconHeight; on the small header it can't exceed the padded height.
+    let logoHeight = min(logoHeight(for: logo), header - 2 * Style.headerPaddingV)
 
     let codeArea = CGRect(
-      x: inset, y: header + gapAbove,
+      x: inset, y: header + inset,
       width: max(0, size.width - 2 * inset),
-      height: max(0, size.height - header - gapAbove - gapBelow))
-
-    let capHeight = Reference.captionCapHeight * H
-    let captionFontSize = capHeight / monospacedCapHeightRatio
+      height: max(0, size.height - header - 2 * inset))
 
     return Metrics(
       size: size,
       headerHeight: header,
-      logoLeading: inset,
-      logoMaxSize: CGSize(width: min(Reference.logoMaxWidth * W, size.width - 2 * inset), height: logoHeightFraction(for: logo) * header),
-      logoOffsetY: logoOffsetFraction(for: logo) * header,
-      countdownTrailing: inset,
+      logoLeading: padH,
+      logoMaxSize: CGSize(width: max(0, size.width - 2 * padH), height: logoHeight),
+      headerTrailing: padH,
       codeArea: codeArea,
-      cornerRadius: Reference.cornerRadius * W,
-      captionFontSize: captionFontSize,
-      captionAdvance: Reference.captionAdvance * W,
-      captionBaseline: Reference.captionBaseline * H,
-      notchHeight: (Reference.codeBottom - Reference.notchTop) * H,
-      notchPadding: Reference.notchPadding * W)
+      codeInset: inset,
+      captionFontSize: Style.captionFontSize,
+      captionTracking: Style.captionTracking,
+      captionBaseline: Style.captionBaseline,
+      notchHeight: Style.notchHeight,
+      notchSidePadding: isSmall ? Style.smallNotchSidePadding : Style.notchSidePadding,
+      notchMinWidth: isSmall ? 0 : Style.notchMinWidth,
+      notchTopRadius: Style.notchTopRadius)
+  }
+
+  /// Linear and PDF417 codes are clipped with the elliptical corners; square ones with 8 px.
+  static func codeCornerSize(for symbology: Symbology) -> CGSize {
+    symbology.kind == .twoD
+      ? CGSize(width: Style.squareCornerRadius, height: Style.squareCornerRadius)
+      : Style.codeCornerSize
   }
 
   /// Where the code itself sits inside `codeArea`, given its module matrix size.
   static func codeRect(in area: CGRect, symbology: Symbology, matrixSize: CGSize) -> CGRect {
     guard matrixSize.width > 0, matrixSize.height > 0, area.width > 0, area.height > 0 else { return area }
     switch symbology.kind {
-    case .linear:
+    // Linear and PDF417 stretch to fill the box (`width/height: 100%` in the old renderer).
+    case .linear, .stacked:
       return area
     case .twoD:
       let side = min(area.width, area.height)
       return CGRect(x: area.midX - side / 2, y: area.midY - side / 2, width: side, height: side)
-    case .stacked:
-      let scale = min(area.width / matrixSize.width, area.height / matrixSize.height)
-      let w = matrixSize.width * scale, h = matrixSize.height * scale
-      return CGRect(x: area.midX - w / 2, y: area.midY - h / 2, width: w, height: h)
     }
   }
-
-  static let monospacedCapHeightRatio: CGFloat = UIFont.monospacedSystemFont(ofSize: 100, weight: .regular).capHeight / 100
 
   /// Natural advance of one monospaced digit at `size`, for computing tracking.
   static func monospacedAdvance(fontSize: CGFloat) -> CGFloat {

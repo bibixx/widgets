@@ -2,7 +2,7 @@ import SwiftUI
 import WidgetKit
 
 /// The one visual for a card: widgets, the card list and the editor's live preview.
-/// Design: see CardLayout (measured from the user's cards).
+/// Design: see CardLayout (ported from the old widgets renderer, in points).
 struct CardView: View {
   let card: CardSnapshot
   let family: CardFamily
@@ -33,12 +33,11 @@ struct CardView: View {
         LogoView(logo: card.logo)
           .frame(maxWidth: metrics.logoMaxSize.width, alignment: logoAlignment)
           .frame(height: metrics.logoMaxSize.height)
-          .offset(y: metrics.logoOffsetY)
           .frame(maxWidth: centersLogo ? .infinity : nil, alignment: .center)
         if !centersLogo { Spacer(minLength: 0) }
       }
       .padding(.leading, centersLogo ? 0 : metrics.logoLeading)
-      .padding(.trailing, metrics.countdownTrailing)
+      .padding(.trailing, metrics.headerTrailing)
       .padding(.horizontal, centersLogo ? metrics.logoLeading : 0)
     }
     .frame(width: metrics.size.width, height: metrics.headerHeight)

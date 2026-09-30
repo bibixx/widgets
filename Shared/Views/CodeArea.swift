@@ -28,14 +28,21 @@ struct CodeArea: View {
     let symbology = card.symbology
     if let matrixSize = try? CodeRaster.matrixSize(for: text, symbology: symbology) {
       let rect = CardLayout.codeRect(in: area, symbology: symbology, matrixSize: matrixSize)
-      let pixelWidth = Int((rect.width * displayScale).rounded())
+      // Without the white card body (tinted/clear modes) the code brings its own white plate.
+      let plate = renderingMode == .fullColor ? 0 : metrics.codeInset * 0.75
+      // A linear code needs ~10 modules of white either side; the plate alone is too thin
+      // once the bars fill the box, so the bars shrink inside it (tinted/clear only).
+      let quietX = plate > 0 && symbology.kind == .linear
+        ? max(plate, (rect.width + 2 * plate) * 10 / (matrixSize.width + 20))
+        : plate
+      let codeWidth = rect.width + 2 * (plate - quietX)
+      let pixelWidth = Int((codeWidth * displayScale).rounded())
       let pixelHeight = Int((rect.height * displayScale).rounded())
       let (notch, captionSpec) = captionParts(caption, pixelWidth: pixelWidth)
-      // Without the white card body (tinted/clear modes) the code brings its own quiet zone.
-      let plate = renderingMode == .fullColor ? 0 : metrics.logoLeading * 0.75
       if let image = try? CodeRaster.image(
         for: text, symbology: symbology, pixelWidth: pixelWidth, pixelHeight: pixelHeight, notch: notch,
-        caption: captionSpec, padding: Int((plate * displayScale).rounded()))
+        caption: captionSpec, padding: Int((plate * displayScale).rounded()),
+        paddingX: Int((quietX * displayScale).rounded()))
       {
         Image(decorative: image, scale: displayScale)
           .resizable()
@@ -44,7 +51,10 @@ struct CodeArea: View {
           // Scanners need true black on white: keep the system from tinting/desaturating it.
           .widgetAccentedRenderingMode(.fullColor)
           .frame(width: rect.width + 2 * plate, height: rect.height + 2 * plate)
-          .clipShape(RoundedRectangle(cornerRadius: plate > 0 ? plate * 0.6 : metrics.cornerRadius, style: .continuous))
+          .clipShape(
+            plate > 0
+              ? RoundedRectangle(cornerRadius: plate * 0.6, style: .circular)
+              : RoundedRectangle(cornerSize: CardLayout.codeCornerSize(for: symbology), style: .circular))
           .opacity(isSample ? 0.3 : 1)
           .overlay(alignment: .topTrailing) { if isSample { SampleBadge().offset(y: -8) } }
           .position(x: rect.midX, y: rect.midY)
@@ -59,14 +69,14 @@ struct CodeArea: View {
   private func captionParts(_ caption: String?, pixelWidth: Int) -> (CodeRaster.Notch?, CodeRaster.Caption?) {
     guard let caption, card.symbology.kind == .linear else { return (nil, nil) }
     let s = displayScale
-    let textWidth = metrics.captionWidth(characters: caption.count)
     let center = CGFloat(pixelWidth) / 2
-    let halfBox = (textWidth / 2 + metrics.notchPadding) * s
+    let halfBox = metrics.notchWidth(characters: caption.count) / 2 * s
     let notch = CodeRaster.Notch(
       minX: Int((center - halfBox).rounded()), maxX: Int((center + halfBox).rounded()),
-      height: Int((metrics.notchHeight * s).rounded()))
+      height: Int((metrics.notchHeight * s).rounded()),
+      topRadius: Int((metrics.notchTopRadius * s).rounded()))
     let spec = CodeRaster.Caption(
-      text: caption, fontSize: metrics.captionFontSize * s, advance: metrics.captionAdvance * s,
+      text: caption, fontSize: metrics.captionFontSize * s, tracking: metrics.captionTracking * s,
       baseline: metrics.captionBaseline * s, centerX: center)
     return (notch, spec)
   }
