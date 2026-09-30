@@ -32,15 +32,6 @@ final class CodeImporter {
   private static let noCode = "No barcode found. Try an image where the whole code is visible."
 }
 
-/// Any image dropped on the editor, e.g. a screenshot dragged from its thumbnail.
-struct DroppedImage: Transferable {
-  let data: Data
-
-  static var transferRepresentation: some TransferRepresentation {
-    DataRepresentation(importedContentType: .image) { DroppedImage(data: $0) }
-  }
-}
-
 extension View {
   /// The "which code?" and "nothing found" dialogs for a `CodeImporter`.
   func codeImportDialogs(_ importer: CodeImporter, draft: EditorDraft) -> some View {

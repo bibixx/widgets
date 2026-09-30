@@ -69,6 +69,12 @@ Timeline logic is pure and testable in `CardTimeline.entries` (static cards: one
 Save writes both the card and the Keychain secret. Switching content kind or preset must keep what
 the user already typed (card number, Żappka User ID). `CodeImporter` / `EditorDropCatcher` read a
 code from a photo or dropped image (`BarcodeDecoder`) to fill the draft.
+Drops can't be handled inside the sheet: the Form's collection view and SwiftUI's hosting views
+claim drags and refuse images, so `.dropDestination` or per-view drop interactions only work in
+patches. `EditorDropCatcher` instead shows a transparent window above everything while the editor
+is open. It passes every real touch through and answers only hit tests that come with a
+`UIDragEvent`. Taps arrive as `UITouchesEvent` with no touches attached yet, so don't use
+"no touches" to detect drags.
 
 ## Presets and logos
 

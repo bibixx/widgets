@@ -25,27 +25,6 @@ struct CardEditorView: View {
       .safeAreaInset(edge: .top, spacing: 0) {
         LivePreviewPanel(draft: draft)
       }
-      // Drop a screenshot (drag its thumbnail) or any image anywhere to read its code.
-      .dropDestination(for: DroppedImage.self) { images, _ in
-        guard let image = images.first else { return false }
-        Task { await importer.importImage(image.data, into: draft) }
-        return true
-      } isTargeted: { dropTargeted = $0 }
-      .overlay {
-        if dropTargeted {
-          RoundedRectangle(cornerRadius: 24, style: .continuous)
-            .strokeBorder(Color.accentColor, style: StrokeStyle(lineWidth: 3, dash: [10, 6]))
-            .background(Color.accentColor.opacity(0.08), in: RoundedRectangle(cornerRadius: 24, style: .continuous))
-            .overlay {
-              Label(draft.contentKind == .zappka ? "Drop to read the Żappka code" : "Drop to read the code", systemImage: "barcode.viewfinder")
-                .font(.headline)
-                .padding(12)
-                .background(.regularMaterial, in: Capsule())
-            }
-            .padding(8)
-            .allowsHitTesting(false)
-        }
-      }
       .codeImportDialogs(importer, draft: draft)
       .navigationTitle(draft.isNew ? "New Card" : "Edit Card")
       .navigationBarTitleDisplayMode(.inline)
@@ -62,6 +41,31 @@ struct CardEditorView: View {
         Button("OK") { saveError = nil }
       } message: {
         Text(saveError ?? "")
+      }
+    }
+    // Drop a screenshot (drag its thumbnail) or any image anywhere on the sheet to read its code.
+    .background(EditorDropCatcher(isTargeted: $dropTargeted) { data in
+      Task { await importer.importImage(data, into: draft) }
+    })
+    .overlay {
+      if dropTargeted {
+        // Down to the screen's bottom edge (the drop works there too); bottom corners follow
+        // the display's rounded corners.
+        let outline = UnevenRoundedRectangle(
+          topLeadingRadius: 24, bottomLeadingRadius: 44, bottomTrailingRadius: 44, topTrailingRadius: 24,
+          style: .continuous)
+        outline
+          .strokeBorder(Color.accentColor, style: StrokeStyle(lineWidth: 3, dash: [10, 6]))
+          .background(Color.accentColor.opacity(0.08), in: outline)
+          .overlay {
+            Label(draft.contentKind == .zappka ? "Drop to read the Żappka code" : "Drop to read the code", systemImage: "barcode.viewfinder")
+              .font(.headline)
+              .padding(12)
+              .background(.regularMaterial, in: Capsule())
+          }
+          .padding(8)
+          .ignoresSafeArea(.all, edges: .bottom)
+          .allowsHitTesting(false)
       }
     }
     .interactiveDismissDisabled()
