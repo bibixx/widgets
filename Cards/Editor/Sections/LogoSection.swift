@@ -4,48 +4,57 @@ import SwiftUI
 struct LogoSection: View {
   @Bindable var draft: EditorDraft
   @State private var photo: PhotosPickerItem?
+  @State private var pickingPhoto = false
   @State private var importingFile = false
   @State private var loadError: String?
 
   var body: some View {
     Section {
-      Picker("Logo", selection: kindBinding) {
-        Text("None").tag(CardLogo.Kind.none)
-        Text("Preset").tag(CardLogo.Kind.preset)
-        Text("Custom").tag(CardLogo.Kind.custom)
-      }
-      .pickerStyle(.segmented)
-
-      switch draft.logo.kind {
-      case .none:
-        EmptyView()
-      case .preset:
-        ScrollView(.horizontal, showsIndicators: false) {
-          HStack(spacing: 10) {
-            ForEach(Presets.all.filter { $0.logoName != nil }) { preset in
-              Button {
-                draft.logo = preset.logo
-              } label: {
-                PresetLogoThumb(preset: preset)
-                  .overlay {
-                    RoundedRectangle(cornerRadius: 6, style: .continuous)
-                      .strokeBorder(draft.logo == preset.logo ? Color.accentColor : .clear, lineWidth: 2.5)
-                  }
-              }
-              .buttonStyle(.plain)
-              .accessibilityLabel("\(preset.name) logo")
+      ScrollView(.horizontal, showsIndicators: false) {
+        HStack(spacing: 10) {
+          Button {
+            draft.logo = .none
+          } label: {
+            LogoTile(isSelected: draft.logo == .none) {
+              Image(systemName: "circle.slash").foregroundStyle(.secondary)
             }
           }
-          .padding(.vertical, 4)
+          .buttonStyle(.plain)
+          .accessibilityLabel("No logo")
+
+          Menu {
+            Button("Photos", systemImage: "photo.on.rectangle") { pickingPhoto = true }
+            Button("Files", systemImage: "folder") { importingFile = true }
+          } label: {
+            LogoTile(isSelected: draft.logo.kind == .custom) {
+              if case .custom(let data) = draft.logo, let image = UIImage(data: data) {
+                Image(uiImage: image).resizable().scaledToFit().padding(6)
+              } else {
+                Image(systemName: "photo.badge.plus").foregroundStyle(.secondary)
+              }
+            }
+          }
+          .buttonStyle(.plain)
+          .accessibilityLabel("Custom logo")
+
+          ForEach(Presets.all.filter { $0.logoName != nil }) { preset in
+            Button {
+              draft.logo = preset.logo
+            } label: {
+              PresetLogoThumb(preset: preset)
+                .overlay {
+                  RoundedRectangle(cornerRadius: 6, style: .continuous)
+                    .strokeBorder(draft.logo == preset.logo ? Color.accentColor : .clear, lineWidth: 2.5)
+                }
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel("\(preset.name) logo")
+            .accessibilityAddTraits(draft.logo == preset.logo ? .isSelected : [])
+          }
         }
-      case .custom:
-        HStack {
-          PhotosPicker("Photos", selection: $photo, matching: .images)
-          Spacer()
-          Button("Files") { importingFile = true }
-        }
-        .buttonStyle(.borderless)
+        .padding(.vertical, 4)
       }
+      .scrollEdgeFades()
       if let loadError { FieldMessage(text: loadError, isError: true) }
     } header: {
       Text("Logo")
@@ -54,6 +63,7 @@ struct LogoSection: View {
         Text("White artwork on a transparent background looks best on the header.")
       }
     }
+    .photosPicker(isPresented: $pickingPhoto, selection: $photo, matching: .images)
     .onChange(of: photo) { _, item in
       guard let item else { return }
       Task {
@@ -69,19 +79,6 @@ struct LogoSection: View {
     }
   }
 
-  private var kindBinding: Binding<CardLogo.Kind> {
-    Binding(
-      get: { draft.logo.kind },
-      set: { kind in
-        switch kind {
-        case .none: draft.logo = .none
-        case .preset: draft.logo = draft.preset?.logo ?? Presets.zappka.logo
-        // Empty until an image is picked; draws nothing meanwhile.
-        case .custom: if draft.logo.kind != .custom { draft.logo = .custom(Data()) }
-        }
-      })
-  }
-
   private func setCustomLogo(_ data: Data?) {
     guard let data, let png = LogoImport.downscaledPNG(data) else {
       loadError = "Couldn't read that image"
@@ -89,6 +86,26 @@ struct LogoSection: View {
     }
     loadError = nil
     draft.logo = .custom(png)
+  }
+}
+
+/// A 52×30 tile matching `PresetLogoThumb`, for the non-preset logo choices.
+private struct LogoTile<Content: View>: View {
+  let isSelected: Bool
+  @ViewBuilder let content: Content
+
+  var body: some View {
+    ZStack {
+      Color(.tertiarySystemFill)
+      content
+    }
+    .frame(width: 52, height: 30)
+    .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
+    .overlay {
+      RoundedRectangle(cornerRadius: 6, style: .continuous)
+        .strokeBorder(isSelected ? Color.accentColor : .clear, lineWidth: 2.5)
+    }
+    .accessibilityAddTraits(isSelected ? .isSelected : [])
   }
 }
 

@@ -26,6 +26,7 @@ struct PresetSection: View {
         }
         .padding(.vertical, 4)
       }
+      .scrollEdgeFades()
     } header: {
       Text("Preset")
     }
