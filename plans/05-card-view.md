@@ -37,14 +37,19 @@ The **widgets** must look like the cards the user designed in widgy (the app's o
 |---|---|
 | Background | plain white, edge to edge (`.contentMarginsDisabled()`, `containerBackground(.white)`) |
 | Header | full width, top **24.1% of H**. **Vertical** gradient, `color1` at the top → `color2` at the bottom (e.g. Żappka `#01B15B`→`#00A335`, Empik `#2A2A2A`→`#000000`). No outline or divider. |
-| Logo | white artwork, leading edge at **6.5% of W** (lined up with the code's left edge), vertically centred in the header, fitted inside a box **≈57% of the header height** tall and up to ≈36% of W wide, `.scaledToFit`, leading-aligned |
+| Logo | white artwork, leading edge at **6.5% of W** (lined up with the code's left edge), vertically centred in the header, height per logo (see notes below), `.scaledToFit`, leading-aligned |
 | Code area | x from **6.5% to 93.5% of W** (87% wide), y from **34.4% to 89.6% of H** (55.2% tall), i.e. centred in the white body with equal ≈10.4% gaps above and below |
 | Code corners | the whole code is clipped to a rounded rect with a tiny radius, **≈0.4% of W** (about 1.5 pt): the outer bars get softly rounded corners |
 | Caption (linear codes) | the number in a **monospaced** font (SF Mono look, slashed zero), black, wide letter-spacing, **cap height ≈4.6% of H**, baseline on the code's bottom edge, centred horizontally |
 | Caption notch | a white rectangle behind the caption cuts the bars: it starts **83.0% of H** (≈1.9% of H above the digits) and runs to the code's bottom; it's as wide as the text plus **≈3.9% of W** padding on each side. Bars on either side of the notch keep full height. |
 | Countdown (Żappka only) | in the header, trailing edge at 93.5% of W, vertically centred: `.system(.body, design: .monospaced).weight(.semibold)`, white at 66% opacity (the old HH:mm:ss clock's spot and style) |
 
-The caption and notch recreate the look from the references; they are drawn by `CardView`, not by the barcode library, so no caption text is ever baked into the code image.
+**As built (stage 5 notes):**
+- The caption/notch design comes from the old widgets renderer (`widgets/app/api/og/Code.tsx`: SF Mono in a white box on the code's bottom edge that cuts the bars); sizes are the measured ones above.
+- Codes are drawn by `CodeRaster` into an exact device-pixel bitmap (modules snapped to whole pixels when that costs ≤15% width). The **caption is drawn into that bitmap** with CoreText, because `Text` gets recoloured in tinted widgets and would vanish on the white notch.
+- Logo heights are per logo, as the old renderer's `iconHeight` did: default 0.578 × header, Żappka 0.682 (nudged up 0.048 × header), Rossmann 0.332, Biedronka 0.434. Medium overlays match the references within ~0.2%.
+- Small cards without a countdown centre the logo (as the old small cards did).
+- Tinted/clear modes: the code image carries its own white plate (quiet zone), since the card's white body is removed there.
 
 **Small and large** have no widgy reference, so derive them from the medium spec: keep the header, logo, insets and caption at the **same absolute point sizes** as a medium widget on the same device (so widgets stacked on a Home Screen line up), and give the code the remaining area. Review screenshots of both with the user before stage 6.
 
@@ -68,7 +73,7 @@ Per-symbology rules (inside the code area):
 
 ## Rendering modes
 Widgets on iOS 26 can be shown **full colour**, **accented/tinted** (Home Screen tint) or **clear/vibrant**.
-- **Header:** mark the gradient and logo `.widgetAccentable()`, so they take the tint.
+- **Header:** mark the header fill `.widgetAccentable()` (not the logo, so the white logo stays visible on the tinted fill).
 - **Code:** it must stay pure black on white in every mode, or scanners fail.
   - Apply `.widgetAccentedRenderingMode(.fullColor)` to the code image, so the system doesn't desaturate or tint it.
   - Keep the white code plate opaque.
