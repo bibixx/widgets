@@ -83,6 +83,6 @@ Key constraints:
 ## Conventions
 
 - 2-space indentation.
-- Horizontal `ScrollView`s get `.scrollEdgeFades()` (defined in `CardEditorView.swift`).
+- Horizontal `ScrollView`s get `.scrollEdgeFades()` (defined in `Cards/Editor/ScrollEdgeFades.swift`).
 - Vision's barcode detector finds nothing in the simulator, so tests decode with zxing
   (`TestDecoder.decodeAll`) and only add Vision on device.
