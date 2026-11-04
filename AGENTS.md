@@ -21,6 +21,9 @@ xcodebuild ... test -only-testing:CardsTests/CardViewRenderTests/mediumZappkaPDF
 
 Signing: `DEVELOPMENT_TEAM` comes from the environment at `xcodegen generate` time; never commit it.
 
+On the phone: `scripts/phone.sh` builds, installs on the connected iPhone and launches (Debug by
+default, `--release`, `-- <launch args>`; the `/phone` skill wraps it). It replaces a TestFlight install.
+
 Publishing to TestFlight: `scripts/publish.sh` (bump, archive, check, upload, commit + tag; the
 `/testflight` skill wraps it). Background, testers and troubleshooting: `docs/publishing.md`.
 

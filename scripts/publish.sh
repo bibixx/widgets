@@ -29,20 +29,13 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-die() { echo "error: $*" >&2; exit 1; }
-step() { echo; echo "==> $*"; }
-
 cd "$(git rev-parse --show-toplevel)"
+# shellcheck source=scripts/_common.sh
+source scripts/_common.sh
 
 # --- Preflight ---------------------------------------------------------------
-command -v xcodegen >/dev/null || die "xcodegen not found (brew install xcodegen)"
-command -v xcodebuild >/dev/null || die "xcodebuild not found"
-
-if [[ -z "${DEVELOPMENT_TEAM:-}" && -f .env.local ]]; then
-  DEVELOPMENT_TEAM="$(sed -n 's/^DEVELOPMENT_TEAM=//p' .env.local | tr -d '"'"'"' ' | head -1)"
-fi
-[[ -n "${DEVELOPMENT_TEAM:-}" ]] ||
-  die "no team ID: export DEVELOPMENT_TEAM or put DEVELOPMENT_TEAM=<id> in .env.local"
+require_tools xcodegen xcodebuild
+load_team_id
 
 if [[ -n "$new_version" && ! "$new_version" =~ ^[0-9]+\.[0-9]+(\.[0-9]+)?$ ]]; then
   die "--version must look like 1.2 or 1.2.3, got '$new_version'"
@@ -86,10 +79,8 @@ step "$version ($build_num) → $next_version ($next_build)"
 
 # --- Generate and archive ----------------------------------------------------
 step "Generating the project"
-DEVELOPMENT_TEAM="$DEVELOPMENT_TEAM" xcodegen generate --quiet
-
-# Homebrew's rsync 3.x breaks the IPA step ("exportArchive Copy failed"); use the system one.
-export PATH="/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
+xcodegen generate --quiet
+use_system_tools
 mkdir -p build
 rm -rf build/Cards.xcarchive build/export
 archive=build/Cards.xcarchive
