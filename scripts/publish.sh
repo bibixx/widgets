@@ -130,7 +130,7 @@ git commit -q -m "$msg" -- "${bump_files[@]}"
 if $dirty; then
   echo "Committed \"$msg\" (not tagged: the upload included uncommitted changes)."
 else
-  git tag "$tag"
+  git tag -m "TestFlight $next_version ($next_build)" "$tag"
   echo "Committed \"$msg\" and tagged $tag."
 fi
 
