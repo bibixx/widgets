@@ -21,8 +21,8 @@ xcodebuild ... test -only-testing:CardsTests/CardViewRenderTests/mediumZappkaPDF
 
 Signing: `DEVELOPMENT_TEAM` comes from the environment at `xcodegen generate` time; never commit it.
 
-Publishing to TestFlight: follow `docs/publishing.md` (version bumps, upload commands,
-testers, troubleshooting). Export with `/usr/bin` ahead of Homebrew in `PATH`, or rsync breaks it.
+Publishing to TestFlight: `scripts/publish.sh` (bump, archive, check, upload, commit + tag; the
+`/testflight` skill wraps it). Background, testers and troubleshooting: `docs/publishing.md`.
 
 Debug launch arguments: `-seed-samples` fills an empty store with the made-up cards from
 `CardPreviewFixtures`; `-open cards://card/<id>` routes a deep link without the system prompt.

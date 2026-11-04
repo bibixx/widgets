@@ -3,20 +3,28 @@
 Cards goes out through TestFlight, either to the internal "Me" group or by public link. The App Store Connect record, the bundle name
 and the home-screen / widget-gallery label are all "punktuj.se"; bundle ID `io.legiec.cards`.
 
-Signing is automatic, and the team ID comes from the environment (never commit it).
+Signing is automatic. The team ID comes from the environment or `.env.local` (never commit it).
 
 ## Every release
 
-### 1. Bump the version
-In `project.yml`:
-- `CURRENT_PROJECT_VERSION`: **always** bump it (1 → 2 → …). App Store Connect rejects a build number
-  it has already seen for the same version.
-- `MARKETING_VERSION`: bump it when you want a new version line in TestFlight (e.g. `0.1.0` → `0.2.0`).
-  A new marketing version triggers Beta App Review again for external testers.
+### 1–2. Bump, archive and upload: `scripts/publish.sh`
+```sh
+scripts/publish.sh                    # next build number, same version
+scripts/publish.sh --version 0.2.0    # new version line (external testers: Beta App Review again)
+scripts/publish.sh --dry-run          # archive and check only, then revert
+```
+It needs a clean working tree (or `--allow-dirty`, which skips the tag) and the team ID from
+`$DEVELOPMENT_TEAM` or a gitignored `.env.local` containing `DEVELOPMENT_TEAM=<id>`.
 
-Commit the bump.
+What it does: bumps `CURRENT_PROJECT_VERSION` (and `MARKETING_VERSION` with `--version`), regenerates
+the project, archives Release with the system rsync, checks the archive (iPhone-only, build number,
+encryption flag), uploads, then commits the bump with the regenerated Info.plists and tags it
+`testflight/<version>-<build>`. It doesn't push. If any step fails, it reverts the bump. Logs are in
+`build/archive.log` and `build/export.log`. Agents: the `/testflight` skill (`.claude/skills/testflight/`) wraps it.
 
-### 2. Archive and upload
+#### By hand (fallback)
+Bump `CURRENT_PROJECT_VERSION` in `project.yml` (always; App Store Connect rejects a build number it
+has already seen for the same version), then:
 ```sh
 DEVELOPMENT_TEAM=<team id> xcodegen generate
 export PATH="/usr/bin:$PATH"   # system rsync, see Troubleshooting
@@ -25,15 +33,9 @@ xcodebuild -scheme Cards -configuration Release -destination 'generic/platform=i
 xcodebuild -exportArchive -archivePath build/Cards.xcarchive \
   -exportOptionsPlist ExportOptions.plist -exportPath build/export -allowProvisioningUpdates
 ```
-Look for `** ARCHIVE SUCCEEDED **` and then `Upload succeeded`. The upload uses the Apple ID signed in
-under Xcode → Settings → Accounts. `ExportOptions.plist` (app-store-connect, upload, automatic signing)
-is checked in, and `build/` is gitignored. Delete `build/` before re-running if an old archive is there.
-
-From Xcode instead: choose the Any iOS Device destination, then Product → Archive → Organizer →
-Distribute App → TestFlight & App Store. The rsync problem doesn't happen there.
-
-If `xcodegen generate` changes `Cards/Info.plist` or `CardsWidget/Info.plist`, commit them too. They're
-generated from `project.yml` but tracked in git.
+Look for `Upload succeeded`, then commit `project.yml` and both Info.plists (they're generated but
+tracked). Delete `build/` first if an old archive is there. From Xcode instead: choose the Any iOS
+Device destination, then Product → Archive → Organizer → Distribute App → TestFlight & App Store.
 
 ### 3. Wait for processing
 The build can take 10–15 minutes to appear under **TestFlight → Builds → iOS**, and processing can take
