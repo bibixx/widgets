@@ -1,6 +1,6 @@
 ---
 name: phone
-description: Build the app and install it on Bartek's connected iPhone with scripts/phone.sh. Use when asked to put, run, install or try the app on the phone or a real device.
+description: Build the app and install it on the connected iPhone with scripts/phone.sh. Use when asked to put, run, install or try the app on the phone or a real device.
 ---
 
 # Run on the phone
@@ -12,7 +12,7 @@ connected iPhone with `devicectl`, and launches the app. It doesn't bump version
 scripts/phone.sh                      # Debug build on the only connected iPhone
 scripts/phone.sh --release            # Release config (what TestFlight ships, minus distribution signing)
 scripts/phone.sh -- -seed-samples     # pass launch arguments to the app
-scripts/phone.sh --device "iPhone (Bartek)" --no-launch
+scripts/phone.sh --device "<device name or UDID>" --no-launch
 ```
 
 Use a long timeout (about 10 min). The build log is in `build/phone.log`; install and launch logs are
