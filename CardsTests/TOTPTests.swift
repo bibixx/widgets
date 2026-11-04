@@ -23,6 +23,7 @@ struct TOTPTests {
 }
 
 struct ZappkaTests {
+  static let rfcSecretData = TOTPTests.rfcSecret
   // Made-up secret, not a real credential.
   static let fakeSecret = "0f1e2d3c4b5a69788796a5b4c3d2e1f00a1b2c3d"
 
@@ -40,13 +41,24 @@ struct ZappkaTests {
 
   @Test func matchesRFCWhenFedTheRFCSecret() {
     let creds = ZappkaCredentials(userId: "u1", secretHex: "3132333435363738393031323334353637383930")
-    #expect(Zappka.code(for: creds, at: Date(timeIntervalSince1970: 59)) == "287082")
+    #expect(Zappka.code(for: creds, at: Date(timeIntervalSince1970: 59), lead: 0) == "287082")
+  }
+
+  @Test func leadShowsTheNextCodeEarly() {
+    let creds = ZappkaCredentials(userId: "u1", secretHex: "3132333435363738393031323334353637383930")
+    // RFC window 2 starts at t=60; with a 5 s lead its code shows from t=55.
+    let raw = TOTP(secret: Self.rfcSecretData)
+    #expect(Zappka.code(for: creds, at: Date(timeIntervalSince1970: 54.9), lead: 5) == raw.code(at: Date(timeIntervalSince1970: 59)))
+    #expect(Zappka.code(for: creds, at: Date(timeIntervalSince1970: 55), lead: 5) == raw.code(at: Date(timeIntervalSince1970: 60)))
+    #expect(Zappka.window(containing: Date(timeIntervalSince1970: 55), lead: 5) == DateInterval(start: Date(timeIntervalSince1970: 55), duration: 30))
+    #expect(Zappka.window(containing: Date(timeIntervalSince1970: 54.9), lead: 5) == DateInterval(start: Date(timeIntervalSince1970: 25), duration: 30))
+    #expect(Zappka.window(containing: Date(timeIntervalSince1970: 3), lead: -5) == DateInterval(start: Date(timeIntervalSince1970: -25), duration: 30))
   }
 
   @Test func payloadFormat() {
     #expect(Zappka.payload(userId: "123456", code: "000042") == "https://srln.pl/view/dashboard?ploy=123456&loyal=000042")
     let creds = ZappkaCredentials(userId: "123456", secretHex: "3132333435363738393031323334353637383930")
-    #expect(Zappka.payload(for: creds, at: Date(timeIntervalSince1970: 59)) == "https://srln.pl/view/dashboard?ploy=123456&loyal=287082")
+    #expect(Zappka.payload(for: creds, at: Date(timeIntervalSince1970: 59), lead: 0) == "https://srln.pl/view/dashboard?ploy=123456&loyal=287082")
   }
 
   @Test func invalidSecretsAreIssuesNotCrashes() {

@@ -6,6 +6,16 @@ enum Zappka {
   static let squareSymbology: Symbology = .qr
   static let host = "srln.pl"
   static let period: TimeInterval = 30
+  /// Codes are shown this many seconds before their TOTP window starts, to make up for the till
+  /// handing the scan to Żabka's server a moment later (and WidgetKit showing an entry late).
+  /// 0 switches exactly on :00/:30; raise it from the editor's hidden debug panel.
+  static let defaultLeadTime: TimeInterval = 0
+  static let leadTimeKey = "zappkaLeadTime"
+  /// Shared App Group defaults, so the app and the widget agree. Tweaked from the editor's
+  /// hidden debug panel.
+  static var leadTime: TimeInterval {
+    UserDefaults(suiteName: SharedStore.appGroup)?.object(forKey: leadTimeKey) as? Double ?? defaultLeadTime
+  }
   /// Drawn faded in the editor preview until the card is signed in.
   static let samplePayload = payload(userId: "000000000", code: "000000")
 
@@ -32,17 +42,20 @@ enum Zappka {
     return userId
   }
 
-  static func payload(for creds: ZappkaCredentials, at date: Date) -> String? {
-    guard creds.isValid, let secret = creds.secretData else { return nil }
-    return payload(userId: creds.userId, code: TOTP(secret: secret, period: period).code(at: date))
+  static func payload(for creds: ZappkaCredentials, at date: Date, lead: TimeInterval = leadTime) -> String? {
+    guard let code = code(for: creds, at: date, lead: lead) else { return nil }
+    return payload(userId: creds.userId, code: code)
   }
 
-  static func code(for creds: ZappkaCredentials, at date: Date) -> String? {
+  /// The code shown at `date`: the TOTP code for `date + lead`.
+  static func code(for creds: ZappkaCredentials, at date: Date, lead: TimeInterval = leadTime) -> String? {
     guard creds.isValid, let secret = creds.secretData else { return nil }
-    return TOTP(secret: secret, period: period).code(at: date)
+    return TOTP(secret: secret, period: period).code(at: date.addingTimeInterval(lead))
   }
 
-  static func window(containing date: Date) -> DateInterval {
-    TOTP(secret: Data(), period: period).window(containing: date)
+  /// The window during which one code is shown: a TOTP window moved `lead` seconds earlier.
+  static func window(containing date: Date, lead: TimeInterval = leadTime) -> DateInterval {
+    let totp = TOTP(secret: Data(), period: period).window(containing: date.addingTimeInterval(lead))
+    return DateInterval(start: totp.start.addingTimeInterval(-lead), duration: totp.duration)
   }
 }

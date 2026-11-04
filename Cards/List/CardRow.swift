@@ -5,7 +5,7 @@ struct CardRow: View {
 
   var body: some View {
     HStack(spacing: 14) {
-      TimelineView(.periodic(from: .now, by: card.content.kind == .zappka ? 30 : 3600)) { context in
+      TimelineView(schedule) { context in
         CardView(card: card.snapshot(), family: .medium, date: context.date)
           .frame(width: 338, height: 158)
           .scaleEffect(0.3, anchor: .topLeading)
@@ -27,5 +27,12 @@ struct CardRow: View {
     }
     .padding(.vertical, 4)
     .accessibilityElement(children: .combine)
+  }
+
+  /// Żappka ticks on the code switches (not 30 s from whenever the list appeared).
+  private var schedule: PeriodicTimelineSchedule {
+    card.content.kind == .zappka
+      ? .periodic(from: Zappka.window(containing: .now).start, by: Zappka.period)
+      : .periodic(from: .now, by: 3600)
   }
 }

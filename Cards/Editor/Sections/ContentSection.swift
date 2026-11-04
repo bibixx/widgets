@@ -14,6 +14,8 @@ struct ContentSection: View {
   @State private var scanning = false
   @State private var pickingPhoto = false
   @State private var photo: PhotosPickerItem?
+  @AppStorage(Zappka.leadTimeKey, store: UserDefaults(suiteName: SharedStore.appGroup))
+  private var leadTime = Zappka.defaultLeadTime
 
   var body: some View {
     Section {
@@ -129,9 +131,25 @@ struct ContentSection: View {
       .buttonStyle(.borderless)
       .accessibilityLabel(revealsSecret ? Text("Hide secret") : Text("Show secret"))
     }
+    Stepper(value: $leadTime, in: -5...15, step: 1) {
+      VStack(alignment: .leading, spacing: 2) {
+        Text("Code lead: \(Int(leadTime)) s").monospacedDigit()
+        Text("Switches at \(switchSeconds). All Żappka cards, applies right away.")
+          .font(.footnote)
+          .foregroundStyle(.secondary)
+      }
+    }
+    .onChange(of: leadTime) { WidgetReloader.reloadAll() }
     Text("Debug: manual entry")
       .font(.footnote)
       .foregroundStyle(.secondary)
+  }
+
+  /// E.g. ":25/:55" for a 5 s lead.
+  private var switchSeconds: String {
+    let first = Int((Zappka.period - leadTime.truncatingRemainder(dividingBy: Zappka.period))
+      .truncatingRemainder(dividingBy: Zappka.period))
+    return [first, first + 30].map { String(format: ":%02d", $0) }.joined(separator: "/")
   }
 
   /// Don't nag about empty fields before anything is typed. Without the debug panel there are

@@ -18,7 +18,8 @@ struct ProviderTests {
     #expect(policy == .atEnd)
     #expect(entries[0].date <= now)
     #expect(now.timeIntervalSince(entries[0].date) < 30)
-    #expect(entries.allSatisfy { $0.date.timeIntervalSince1970.truncatingRemainder(dividingBy: 30) == 0 })
+    // Entries land on the code switches, `leadTime` before each TOTP boundary.
+    #expect(entries.allSatisfy { ($0.date.timeIntervalSince1970 + Zappka.leadTime).truncatingRemainder(dividingBy: 30) == 0 })
     let codes = Set(entries.compactMap { Zappka.code(for: CardPreviewFixtures.zappka.zappkaCredentials!, at: $0.date) })
     #expect(codes.count > 100, "each entry renders a different code")
   }
