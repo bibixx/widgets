@@ -31,6 +31,8 @@
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>KeychainAccessGroup</key>
 	<string>$(AppIdentifierPrefix)io.legiec.cards.shared</string>
 	<key>NSCameraUsageDescription</key>
