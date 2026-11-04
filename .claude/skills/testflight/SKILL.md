@@ -34,3 +34,17 @@ Report the version and build, the commit and the tag. Don't push unless asked; s
   "Me" group;
 - problems found after the upload (e.g. ITMS-90129) arrive only by email. Ask them to forward the
   `ITMS-` code if one comes.
+
+## Expiry reminder
+TestFlight builds expire 90 days after upload, and the app and its widgets stop working. After every
+real upload (not `--dry-run`), move the Google Calendar reminder so there's always exactly one, for the
+newest build:
+- Search the primary calendar for future events titled
+  `punktuj.se: upload a new TestFlight build`.
+- If one exists, update it. Otherwise create it. Never leave two.
+- **All-day** on the upload date + 80 days, availability free, default reminders.
+- Description, exactly this and nothing else:
+  `TestFlight build <version> (<build>), uploaded <YYYY-MM-DD>, expires on <upload + 90 days> (90 days).`
+
+If the Google Calendar tools aren't available, give the user the date (upload + 80 days) and suggest
+they set a reminder themselves.
