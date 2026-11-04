@@ -59,6 +59,7 @@ targets:
         KeychainAccessGroup: $(AppIdentifierPrefix)io.legiec.cards.shared
         NSCameraUsageDescription: Scan the barcode on a physical card to copy its number.
         NSPhotoLibraryUsageDescription: Pick an image to use as a card logo or to import a card's barcode.
+        ITSAppUsesNonExemptEncryption: false
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: io.legiec.cards
