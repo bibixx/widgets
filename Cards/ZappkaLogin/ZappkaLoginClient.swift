@@ -66,12 +66,34 @@ struct ZappkaLoginClient: Sendable {
 
   /// 9 digits, with an optional +48 / 0048 prefix and spaces or dashes; nil otherwise.
   static func normalizePhone(_ raw: String) -> String? {
-    var digits = raw.filter { !" -\u{00A0}".contains($0) }
+    var digits = raw.filter { !" -\u{00A0}".contains($0) && !isInvisibleFormat($0) }
     for prefix in ["+48", "0048"] where digits.hasPrefix(prefix) && digits.count > 9 {
       digits.removeFirst(prefix.count)
     }
     guard digits.count == 9, digits.allSatisfy(\.isASCII), digits.allSatisfy(\.isNumber) else { return nil }
     return digits
+  }
+
+  /// Drops a leading +48 / 0048 (e.g. from Contacts autofill), since the field already shows +48.
+  /// Anything else comes back unchanged.
+  static func stripCountryPrefix(_ raw: String) -> String {
+    let start = raw.drop { $0.isWhitespace || isInvisibleFormat($0) }
+    for prefix in ["+48", "0048"] where start.hasPrefix(prefix) {
+      return String(start.dropFirst(prefix.count).drop { $0.isWhitespace || $0 == "-" || isInvisibleFormat($0) })
+    }
+    return raw
+  }
+
+  /// "505968488" → "505 968 488".
+  static func formatPhone(_ digits: String) -> String {
+    stride(from: 0, to: digits.count, by: 3)
+      .map { String(digits.dropFirst($0).prefix(3)) }
+      .joined(separator: " ")
+  }
+
+  /// Bidi marks and other invisible format characters (Unicode Cf) that autofill can add.
+  private static func isInvisibleFormat(_ character: Character) -> Bool {
+    character.unicodeScalars.allSatisfy { $0.properties.generalCategory == .format }
   }
 
   // MARK: Flow

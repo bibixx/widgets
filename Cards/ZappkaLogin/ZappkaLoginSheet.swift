@@ -21,7 +21,9 @@ final class ZappkaLoginModel {
   init(client: ZappkaLoginClient = ZappkaLoginClient()) { self.client = client }
 
   var canSendCode: Bool { !isWorking && ZappkaLoginClient.normalizePhone(phone) != nil }
-  var canSignIn: Bool { !isWorking && code.contains(where: \.isNumber) }
+  var canSignIn: Bool { !isWorking && code.count == Self.codeLength }
+
+  static let codeLength = 6
 
   func sendCode() async {
     await run {
@@ -45,6 +47,7 @@ final class ZappkaLoginModel {
     guard case .code(let pending) = step else { return nil }
     var result: ZappkaCredentials?
     await run { result = try await client.finish(pending, code: code) }
+    if result == nil { code = "" }
     return result
   }
 
@@ -83,13 +86,10 @@ struct ZappkaLoginSheet: View {
 
   var body: some View {
     NavigationStack {
-      Form {
+      Group {
         switch model.step {
         case .phone: phoneStep
         case .code(let pending): codeStep(pending)
-        }
-        if let error = model.error {
-          Section { FieldMessage(text: error, isError: true) }
         }
       }
       .navigationTitle("Sign in with Żabka")
@@ -124,49 +124,125 @@ struct ZappkaLoginSheet: View {
   }
 
   private var phoneStep: some View {
-    Section {
-      HStack {
-        Text("+48").foregroundStyle(.secondary)
-        TextField("Phone number", text: $model.phone)
-          .keyboardType(.phonePad)
-          .textContentType(.telephoneNumber)
-          .focused($focused, equals: .phone)
-          .onSubmit { Task { await model.sendCode() } }
+    Form {
+      Section {
+        HStack {
+          Text("+48").foregroundStyle(.secondary)
+          TextField("Phone number", text: $model.phone)
+            .keyboardType(.phonePad)
+            .textContentType(.telephoneNumber)
+            .focused($focused, equals: .phone)
+            .onSubmit { Task { await model.sendCode() } }
+            .onChange(of: model.phone) { _, new in
+              let stripped = ZappkaLoginClient.stripCountryPrefix(new)
+              if stripped != new { model.phone = stripped }
+            }
+        }
+      } header: {
+        Text("Phone number")
+      } footer: {
+        Text("Use the number of your Żabka account. You'll get an SMS code. Cards keeps only the secret behind your Żappka code, never your login.")
       }
-    } header: {
-      Text("Phone number")
-    } footer: {
-      Text("Use the number of your Żabka account. You'll get an SMS code. Cards keeps only the secret behind your Żappka code, never your login.")
+      if let error = model.error {
+        Section { FieldMessage(text: error, isError: true) }
+      }
     }
   }
 
   private func codeStep(_ pending: ZappkaLoginClient.PendingSignIn) -> some View {
-    Section {
-      TextField("Code", text: $model.code)
-        .keyboardType(.numberPad)
-        .textContentType(.oneTimeCode)
-        .font(.body.monospaced())
-        .focused($focused, equals: .code)
-        .onSubmit { Task { await signIn() } }
-      TimelineView(.periodic(from: .now, by: 1)) { context in
-        let remaining = Int(ceil((model.resendAt ?? context.date).timeIntervalSince(context.date)))
-        Button(remaining > 0 ? "Resend Code (\(remaining) s)" : "Resend Code") {
-          Task { await model.resend() }
+    ScrollView {
+      VStack(alignment: .leading, spacing: 24) {
+        VStack(alignment: .leading, spacing: 8) {
+          Text("Confirm with the SMS code")
+            .font(.title2.bold())
+          Text("Enter the 6-digit code we texted to +48 \(ZappkaLoginClient.formatPhone(pending.phone)).")
+            .foregroundStyle(.secondary)
         }
-        .disabled(remaining > 0 || model.isWorking)
+        VStack(alignment: .leading, spacing: 12) {
+          OneTimeCodeField(code: $model.code, length: ZappkaLoginModel.codeLength, focus: $focused, field: .code)
+            .onChange(of: model.code) {
+              if model.canSignIn { Task { await signIn() } }
+            }
+          if let error = model.error {
+            FieldMessage(text: error, isError: true)
+          }
+        }
+        VStack(alignment: .leading, spacing: 12) {
+          TimelineView(.periodic(from: .now, by: 1)) { context in
+            let remaining = Int(ceil((model.resendAt ?? context.date).timeIntervalSince(context.date)))
+            HStack(spacing: 4) {
+              Text("Didn't get the code?")
+              if remaining > 0 {
+                Text("Wait \(remaining) s").foregroundStyle(.secondary).monospacedDigit()
+              } else {
+                Button("Send again") { Task { await model.resend() } }
+                  .disabled(model.isWorking)
+              }
+            }
+          }
+          Button("Change Number") { model.changeNumber() }
+            .disabled(model.isWorking)
+        }
+        .font(.subheadline)
       }
-      Button("Change Number") { model.changeNumber() }
-        .disabled(model.isWorking)
-    } header: {
-      Text("SMS code")
-    } footer: {
-      Text("Sent to +48 \(pending.phone).")
+      .frame(maxWidth: .infinity, alignment: .leading)
+      .padding(20)
     }
+    .background(Color(.systemGroupedBackground))
   }
 
   private func signIn() async {
     guard model.canSignIn, let credentials = await model.signIn() else { return }
     onSignIn(credentials)
     dismiss()
+  }
+}
+
+/// A row of digit boxes over an invisible text field, so the keyboard's "From Messages"
+/// suggestion and paste still work.
+private struct OneTimeCodeField<Field: Hashable>: View {
+  @Binding var code: String
+  let length: Int
+  var focus: FocusState<Field?>.Binding
+  let field: Field
+
+  private var isFocused: Bool { focus.wrappedValue == field }
+
+  var body: some View {
+    ZStack {
+      TextField("", text: $code)
+        .keyboardType(.numberPad)
+        .textContentType(.oneTimeCode)
+        .foregroundStyle(.clear)
+        .tint(.clear)
+        .focused(focus, equals: field)
+        .accessibilityLabel("Code")
+        .onChange(of: code) { _, new in
+          let digits = String(new.filter { $0.isASCII && $0.isNumber }.prefix(length))
+          if digits != new { code = digits }
+        }
+      HStack(spacing: 8) {
+        ForEach(0..<length, id: \.self) { index in
+          box(index)
+        }
+      }
+      .contentShape(.rect)
+      .onTapGesture { focus.wrappedValue = field }
+      .accessibilityHidden(true)
+    }
+  }
+
+  private func box(_ index: Int) -> some View {
+    let digits = Array(code)
+    let active = isFocused && index == min(digits.count, length - 1)
+    return RoundedRectangle(cornerRadius: 10)
+      .fill(Color(.secondarySystemGroupedBackground))
+      .strokeBorder(active ? Color.primary : Color(.separator), lineWidth: active ? 2 : 1)
+      .frame(width: 48, height: 58)
+      .overlay {
+        if index < digits.count {
+          Text(String(digits[index])).font(.title2.monospacedDigit())
+        }
+      }
   }
 }

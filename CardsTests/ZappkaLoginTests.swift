@@ -124,9 +124,25 @@ struct ZappkaLoginTests {
     #expect(stub.requests.isEmpty)
   }
 
-  @Test(arguments: ["600 700 800", "+48600700800", "0048 600-700-800", "600-700-800"])
+  @Test(arguments: ["600 700 800", "+48600700800", "0048 600-700-800", "600-700-800", "\u{202A}+48 600 700 800\u{202C}"])
   func phoneNormalizes(_ raw: String) {
     #expect(ZappkaLoginClient.normalizePhone(raw) == "600700800")
+  }
+
+  @Test(arguments: [
+    ("+48 600 700 800", "600 700 800"),
+    ("0048600700800", "600700800"),
+    ("\u{202A}+48 600 700 800\u{202C}", "600 700 800\u{202C}"),
+    ("+48", ""),
+    ("600 700 800", "600 700 800"),
+    ("+49 600 700 800", "+49 600 700 800"),
+  ])
+  func phoneStripsCountryPrefix(_ raw: String, _ expected: String) {
+    #expect(ZappkaLoginClient.stripCountryPrefix(raw) == expected)
+  }
+
+  @Test func phoneFormatsInThrees() {
+    #expect(ZappkaLoginClient.formatPhone("505968488") == "505 968 488")
   }
 
   @Test(arguments: ["", "60070080", "6007008001", "60070080a", "+49600700800"])
