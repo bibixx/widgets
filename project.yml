@@ -16,7 +16,6 @@ settings:
     MARKETING_VERSION: "0.1.0"
     CURRENT_PROJECT_VERSION: "1"
     ENABLE_USER_SCRIPT_SANDBOXING: YES
-    TARGETED_DEVICE_FAMILY: "1"
 
 packages:
   ZXingCpp:
@@ -63,6 +62,8 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: io.legiec.cards
+        # Per target: XcodeGen's iOS preset sets "1,2" here, overriding project-level.
+        TARGETED_DEVICE_FAMILY: "1"
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
 
@@ -93,6 +94,7 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: io.legiec.cards.widget
+        TARGETED_DEVICE_FAMILY: "1"
 
   CardsTests:
     type: bundle.unit-test

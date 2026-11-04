@@ -21,6 +21,17 @@ xcodebuild ... test -only-testing:CardsTests/CardViewRenderTests/mediumZappkaPDF
 
 Signing: `DEVELOPMENT_TEAM` comes from the environment at `xcodegen generate` time; never commit it.
 
+TestFlight upload (bump `CURRENT_PROJECT_VERSION` first). Put `/usr/bin` ahead of Homebrew:
+Homebrew's rsync 3.x breaks the IPA step with "exportArchive Copy failed".
+
+```sh
+export PATH="/usr/bin:$PATH"
+xcodebuild -scheme Cards -configuration Release -destination 'generic/platform=iOS' \
+  -archivePath build/Cards.xcarchive -allowProvisioningUpdates archive
+xcodebuild -exportArchive -archivePath build/Cards.xcarchive \
+  -exportOptionsPlist ExportOptions.plist -exportPath build/export -allowProvisioningUpdates
+```
+
 Debug launch arguments: `-seed-samples` fills an empty store with the made-up cards from
 `CardPreviewFixtures`; `-open cards://card/<id>` routes a deep link without the system prompt.
 
