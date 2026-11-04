@@ -552,7 +552,7 @@
         }
       }
     },
-    "Enter the 6-digit code we texted to +48 %@." : {
+    "Enter the 6-digit code you'll get by SMS at +48 %@." : {
       "localizations" : {
         "pl" : {
           "stringUnit" : {
@@ -1132,6 +1132,16 @@
         }
       }
     },
+    "The phone number linked to your Żabka account. In the next step, enter the confirmation code." : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Numer telefonu powiązany z Twoim kontem Żabka. W następnym kroku podaj kod potwierdzający."
+          }
+        }
+      }
+    },
     "The secret must be hexadecimal (0–9, a–f)" : {
       "localizations" : {
         "pl" : {
@@ -1228,16 +1238,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "UPC-E przyjmuje tylko cyfry"
-          }
-        }
-      }
-    },
-    "Use the number of your Żabka account. You'll get an SMS code. Cards keeps only the secret behind your Żappka code, never your login." : {
-      "localizations" : {
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Numer telefonu powiązany z Twoim kontem Żabka. W następnym kroku podaj kod potwierdzający."
           }
         }
       }

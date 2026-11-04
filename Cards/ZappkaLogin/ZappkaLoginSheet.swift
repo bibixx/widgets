@@ -141,7 +141,7 @@ struct ZappkaLoginSheet: View {
       } header: {
         Text("Phone number")
       } footer: {
-        Text("Use the number of your Żabka account. You'll get an SMS code. Cards keeps only the secret behind your Żappka code, never your login.")
+        Text("The phone number linked to your Żabka account. In the next step, enter the confirmation code.")
       }
       if let error = model.error {
         Section { FieldMessage(text: error, isError: true) }
@@ -155,7 +155,7 @@ struct ZappkaLoginSheet: View {
         VStack(alignment: .leading, spacing: 8) {
           Text("Confirm with the SMS code")
             .font(.title2.bold())
-          Text("Enter the 6-digit code we texted to +48 \(ZappkaLoginClient.formatPhone(pending.phone)).")
+          Text("Enter the 6-digit code you'll get by SMS at +48 \(ZappkaLoginClient.formatPhone(pending.phone)).")
             .foregroundStyle(.secondary)
         }
         VStack(alignment: .leading, spacing: 12) {
