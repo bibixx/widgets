@@ -116,7 +116,7 @@ final class EditorDraft {
 
   var displayName: String {
     let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
-    return trimmed.isEmpty ? (preset?.name ?? "Card") : trimmed
+    return trimmed.isEmpty ? (preset?.name ?? String(localized: "Card")) : trimmed
   }
 
   /// Exactly what the widget will draw (plus the "Sample" look for an empty number).
@@ -139,7 +139,7 @@ final class EditorDraft {
   var credentialIssues: [ZappkaCredentials.Issue] { credentials.validate() }
 
   var colorIssues: [String] {
-    [color1Hex, color2Hex].contains { Color.rgb(hex: $0) == nil } ? ["Colours must be #RRGGBB"] : []
+    [color1Hex, color2Hex].contains { Color.rgb(hex: $0) == nil } ? [String(localized: "Colours must be #RRGGBB")] : []
   }
 
   var tapLink: TapLink.Parsed { TapLink.parse(tapURL) }

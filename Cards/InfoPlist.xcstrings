@@ -1,0 +1,22 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "NSCameraUsageDescription" : {
+      "comment" : "Privacy - Camera Usage Description",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Scan the barcode on a physical card to copy its number." } },
+        "pl" : { "stringUnit" : { "state" : "translated", "value" : "Zeskanuj kod kreskowy z fizycznej karty, aby skopiować jej numer." } }
+      }
+    },
+    "NSPhotoLibraryUsageDescription" : {
+      "comment" : "Privacy - Photo Library Usage Description",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Pick an image to use as a card logo or to import a card's barcode." } },
+        "pl" : { "stringUnit" : { "state" : "translated", "value" : "Wybierz obraz, który posłuży jako logo karty albo z którego zostanie odczytany kod kreskowy." } }
+      }
+    }
+  },
+  "version" : "1.0"
+}

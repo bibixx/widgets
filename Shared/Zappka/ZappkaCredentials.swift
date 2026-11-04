@@ -25,12 +25,12 @@ struct ZappkaCredentials: Codable, Hashable, Sendable {
 
     var message: String {
       switch self {
-      case .missingUserId: "Enter your User ID"
-      case .missingSecret: "Enter your secret"
-      case .secretNotHex: "The secret must be hexadecimal (0–9, a–f)"
-      case .secretOddLength: "The secret must have an even number of characters"
-      case .secretShort: "This secret looks short — double-check it"
-      case .userIdUnusualCharacters: "The User ID usually contains only letters, digits, - and _"
+      case .missingUserId: String(localized: "Enter your User ID")
+      case .missingSecret: String(localized: "Enter your secret")
+      case .secretNotHex: String(localized: "The secret must be hexadecimal (0–9, a–f)")
+      case .secretOddLength: String(localized: "The secret must have an even number of characters")
+      case .secretShort: String(localized: "This secret looks short — double-check it")
+      case .userIdUnusualCharacters: String(localized: "The User ID usually contains only letters, digits, - and _")
       }
     }
   }

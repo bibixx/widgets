@@ -16,7 +16,7 @@ final class CodeImporter {
     let codes = await Task.detached { UIImage(data: data)?.cgImage.map(BarcodeDecoder.detect(in:)) ?? [] }.value
     if draft.contentKind == .zappka {
       guard let userId = codes.lazy.compactMap({ Zappka.userId(fromPayload: $0.text) }).first else {
-        failure = codes.isEmpty ? Self.noCode : "That code isn't a Żappka code."
+        failure = codes.isEmpty ? Self.noCode : String(localized: "That code isn't a Żappka code.")
         return
       }
       draft.zappkaUserId = userId
@@ -29,7 +29,7 @@ final class CodeImporter {
     }
   }
 
-  private static let noCode = "No barcode found. Try an image where the whole code is visible."
+  private static var noCode: String { String(localized: "No barcode found. Try an image where the whole code is visible.") }
 }
 
 extension View {
@@ -67,6 +67,6 @@ private struct CodeImportDialogs: ViewModifier {
 
   private func label(for code: BarcodeDecoder.Detected) -> String {
     let text = code.text.count > 24 ? String(code.text.prefix(24)) + "…" : code.text
-    return "\(code.symbology?.displayName ?? "Barcode") · \(text)"
+    return "\(code.symbology?.displayName ?? String(localized: "Barcode")) · \(text)"
   }
 }

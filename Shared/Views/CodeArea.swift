@@ -60,7 +60,7 @@ struct CodeArea: View {
           .position(x: rect.midX, y: rect.midY)
       }
     } else {
-      ProblemTile(symbol: "exclamationmark.triangle", message: "Can't draw this code", compact: area.height < 60)
+      ProblemTile(symbol: "exclamationmark.triangle", message: String(localized: "Can't draw this code"), compact: area.height < 60)
         .frame(width: area.width, height: area.height)
         .position(x: area.midX, y: area.midY)
     }

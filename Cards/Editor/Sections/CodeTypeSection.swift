@@ -17,7 +17,7 @@ struct CodeTypeSection: View {
   }
 
   /// A menu of toggles rather than a Picker: Picker ignores `.disabled` on its options.
-  private func picker(_ title: String, selection: Binding<Symbology>) -> some View {
+  private func picker(_ title: LocalizedStringKey, selection: Binding<Symbology>) -> some View {
     LabeledContent(title) {
       Menu {
         Section("Linear") { options(.linear, selection: selection) }

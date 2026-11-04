@@ -66,7 +66,9 @@ struct CardView: View {
   private var logoAlignment: Alignment { centersLogo ? .center : .leading }
 
   private var accessibilityLabel: String {
-    card.isZappka ? "\(card.name) card, rotating code" : "\(card.name) card, \(shown.symbology.displayName)"
+    card.isZappka
+      ? String(localized: "\(card.name) card, rotating code")
+      : String(localized: "\(card.name) card, \(shown.symbology.displayName)")
   }
 }
 

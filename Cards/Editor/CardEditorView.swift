@@ -14,7 +14,7 @@ struct CardEditorView: View {
       Form {
         PresetSection(draft: draft)
         Section("Name") {
-          TextField(draft.preset?.name ?? "Card name", text: $draft.name)
+          TextField(draft.preset?.name ?? String(localized: "Card name"), text: $draft.name)
             .textInputAutocapitalization(.words)
         }
         ContentSection(draft: draft, importer: importer)
@@ -59,7 +59,7 @@ struct CardEditorView: View {
           .strokeBorder(Color.accentColor, style: StrokeStyle(lineWidth: 3, dash: [10, 6]))
           .background(Color.accentColor.opacity(0.08), in: outline)
           .overlay {
-            Label(draft.contentKind == .zappka ? "Drop to read the Żappka code" : "Drop to read the code", systemImage: "barcode.viewfinder")
+            Label(draft.contentKind == .zappka ? String(localized: "Drop to read the Żappka code") : String(localized: "Drop to read the code"), systemImage: "barcode.viewfinder")
               .font(.headline)
               .padding(12)
               .background(.regularMaterial, in: Capsule())

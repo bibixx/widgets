@@ -18,7 +18,7 @@ enum ValidationResult: Equatable, Sendable {
 enum BarcodeValidation {
   static func validate(_ text: String, for symbology: Symbology) -> ValidationResult {
     let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
-    guard !trimmed.isEmpty else { return .error("Enter card number") }
+    guard !trimmed.isEmpty else { return .error(String(localized: "Enter card number")) }
 
     switch symbology {
     case .ean13: return validateChecksummed(trimmed, lengths: (12, 13), name: "EAN-13")
@@ -26,15 +26,15 @@ enum BarcodeValidation {
     case .upcA: return validateChecksummed(trimmed, lengths: (11, 12), name: "UPC-A")
     case .upcE: return validateUPCE(trimmed)
     case .itf:
-      guard trimmed.allSatisfy(\.isASCIIDigit) else { return .error("ITF takes digits only") }
-      guard trimmed.count.isMultiple(of: 2) else { return .error("ITF needs an even number of digits") }
+      guard trimmed.allSatisfy(\.isASCIIDigit) else { return .error(String(localized: "ITF takes digits only")) }
+      guard trimmed.count.isMultiple(of: 2) else { return .error(String(localized: "ITF needs an even number of digits")) }
       return .ok
     case .code39:
       let allowed = Set("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ -.$/+%")
       guard trimmed.uppercased().allSatisfy(allowed.contains) else {
-        return .error("Code 39 allows A–Z, 0–9 and - . $ / + % space")
+        return .error(String(localized: "Code 39 allows A–Z, 0–9 and - . $ / + % space"))
       }
-      return trimmed == trimmed.uppercased() ? .ok : .warning("Lowercase letters will be uppercased")
+      return trimmed == trimmed.uppercased() ? .ok : .warning(String(localized: "Lowercase letters will be uppercased"))
     case .codabar:
       var body = Substring(trimmed.uppercased())
       let guards = Set("ABCD")
@@ -43,13 +43,13 @@ enum BarcodeValidation {
       }
       let allowed = Set("0123456789-$:/.+")
       guard !body.isEmpty, body.allSatisfy(allowed.contains) else {
-        return .error("Codabar allows 0–9 and - $ : / . + (optional A–D start/stop)")
+        return .error(String(localized: "Codabar allows 0–9 and - $ : / . + (optional A–D start/stop)"))
       }
       return .ok
     case .code128, .code93:
       if !trimmed.allSatisfy(\.isASCII) {
-        if symbology == .code93 { return .error("Code 93 takes ASCII characters only") }
-        return .warning("Non-ASCII characters may not scan everywhere")
+        if symbology == .code93 { return .error(String(localized: "Code 93 takes ASCII characters only")) }
+        return .warning(String(localized: "Non-ASCII characters may not scan everywhere"))
       }
       return encodable(trimmed, symbology)
     case .qr, .pdf417, .aztec, .dataMatrix:
@@ -87,32 +87,32 @@ enum BarcodeValidation {
   }
 
   private static func validateChecksummed(_ text: String, lengths: (body: Int, full: Int), name: String) -> ValidationResult {
-    guard text.allSatisfy(\.isASCIIDigit) else { return .error("\(name) takes digits only") }
+    guard text.allSatisfy(\.isASCIIDigit) else { return .error(String(localized: "\(name) takes digits only")) }
     switch text.count {
     case lengths.body:
-      guard let digit = checkDigit(text) else { return .error("\(name) takes digits only") }
-      return .warning("Check digit added: \(digit)")
+      guard let digit = checkDigit(text) else { return .error(String(localized: "\(name) takes digits only")) }
+      return .warning(String(localized: "Check digit added: \(digit)"))
     case lengths.full:
       let body = String(text.dropLast())
-      guard checkDigit(body) == text.last?.wholeNumberValue else { return .error("Check digit is wrong") }
+      guard checkDigit(body) == text.last?.wholeNumberValue else { return .error(String(localized: "Check digit is wrong")) }
       return .ok
     default:
-      return .error("\(name) needs \(lengths.body) or \(lengths.full) digits")
+      return .error(String(localized: "\(name) needs \(lengths.body) or \(lengths.full) digits"))
     }
   }
 
   private static func validateUPCE(_ text: String) -> ValidationResult {
-    guard text.allSatisfy(\.isASCIIDigit) else { return .error("UPC-E takes digits only") }
-    guard text.first == "0" || text.first == "1" else { return .error("UPC-E must start with 0 or 1") }
+    guard text.allSatisfy(\.isASCIIDigit) else { return .error(String(localized: "UPC-E takes digits only")) }
+    guard text.first == "0" || text.first == "1" else { return .error(String(localized: "UPC-E must start with 0 or 1")) }
     switch text.count {
     case 7:
-      guard let digit = upcECheckDigit(text) else { return .error("UPC-E takes digits only") }
-      return .warning("Check digit added: \(digit)")
+      guard let digit = upcECheckDigit(text) else { return .error(String(localized: "UPC-E takes digits only")) }
+      return .warning(String(localized: "Check digit added: \(digit)"))
     case 8:
-      guard upcECheckDigit(String(text.dropLast())) == text.last?.wholeNumberValue else { return .error("Check digit is wrong") }
+      guard upcECheckDigit(String(text.dropLast())) == text.last?.wholeNumberValue else { return .error(String(localized: "Check digit is wrong")) }
       return .ok
     default:
-      return .error("UPC-E needs 7 or 8 digits")
+      return .error(String(localized: "UPC-E needs 7 or 8 digits"))
     }
   }
 

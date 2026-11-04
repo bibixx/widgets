@@ -21,9 +21,9 @@ enum CardRenderingMode: String, CaseIterable, Identifiable, Sendable {
   var id: String { rawValue }
   var displayName: String {
     switch self {
-    case .fullColor: "Full colour"
-    case .accented: "Tinted"
-    case .vibrant: "Clear"
+    case .fullColor: String(localized: "Full colour")
+    case .accented: String(localized: "Tinted")
+    case .vibrant: String(localized: "Clear")
     }
   }
 }

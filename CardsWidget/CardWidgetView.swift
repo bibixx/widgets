@@ -44,7 +44,7 @@ struct CardWidgetView: View {
     }
   }
 
-  private func message(_ text: String, symbol: String) -> some View {
+  private func message(_ text: LocalizedStringKey, symbol: String) -> some View {
     VStack(spacing: 8) {
       Image(systemName: symbol).font(.title2)
       Text(text).font(.footnote).multilineTextAlignment(.center)

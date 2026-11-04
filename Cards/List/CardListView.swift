@@ -38,7 +38,7 @@ struct CardListView: View {
       editor(for: editing)
     }
     .confirmationDialog(
-      "Delete \(pendingDelete?.name ?? "card")?", isPresented: deleteBinding, titleVisibility: .visible
+      "Delete \(pendingDelete?.name ?? String(localized: "card"))?", isPresented: deleteBinding, titleVisibility: .visible
     ) {
       Button("Delete", role: .destructive) {
         if let card = pendingDelete { try? Card.delete(card, in: context) }

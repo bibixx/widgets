@@ -43,7 +43,7 @@ enum Presets {
   // (https://app-site-association.cdn-apple.com/a/v1/<domain>). Żappka's is an AppsFlyer OneLink
   // template (zappka.onelink.me, `/aGPw/*` → pl.zabka.apb2c). Biedronka and parkrun publish none.
   // Lidl Plus: Code 128 per the "Adding a preset" guide, not yet checked against a real card.
-  static let custom = Preset(id: "custom", name: "Custom", color1Hex: "#ff00ff", color2Hex: "#ff0000", logoName: nil, contentKind: .raw, symbology: .code128)
+  static let custom = Preset(id: "custom", name: String(localized: "Custom"), color1Hex: "#ff00ff", color2Hex: "#ff0000", logoName: nil, contentKind: .raw, symbology: .code128)
   static let zappka = Preset(id: "zappka", name: "Żappka", color1Hex: "#01B15B", color2Hex: "#00A335", logoName: "zappka", contentKind: .zappka, symbology: Zappka.symbology, squareSymbology: Zappka.squareSymbology, appURL: "https://zappka.onelink.me/aGPw/")
   static let biedronka = Preset(id: "biedronka", name: "Biedronka", color1Hex: "#9a0100", color2Hex: "#ff0011", logoName: "biedronka", contentKind: .raw, symbology: .pdf417)
   static let rossmann = Preset(id: "rossmann", name: "Rossmann", color1Hex: "#C20225", color2Hex: "#A2021F", logoName: "rossmann", contentKind: .raw, symbology: .code128, appURL: "https://www.rossmann.pl/")

@@ -123,7 +123,7 @@ struct ContentSection: View {
         Image(systemName: revealsSecret ? "eye.slash" : "eye")
       }
       .buttonStyle(.borderless)
-      .accessibilityLabel(revealsSecret ? "Hide secret" : "Show secret")
+      .accessibilityLabel(revealsSecret ? Text("Hide secret") : Text("Show secret"))
     }
     Text("Debug: manual entry")
       .font(.footnote)
@@ -147,7 +147,7 @@ struct ContentSection: View {
 
   private func importPhoto(_ item: PhotosPickerItem) async {
     guard let data = try? await item.loadTransferable(type: Data.self) else {
-      importer.failure = "Couldn't open that photo."
+      importer.failure = String(localized: "Couldn't open that photo.")
       return
     }
     await importer.importImage(data, into: draft)

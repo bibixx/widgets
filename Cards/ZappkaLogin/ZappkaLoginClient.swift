@@ -33,11 +33,11 @@ enum ZappkaLoginError: LocalizedError, Equatable {
 
   var errorDescription: String? {
     switch self {
-    case .invalidPhone: "Enter a 9-digit Polish phone number."
-    case .wrongCode: "That code didn't work. Check the SMS and try again."
-    case .tooManyAttempts: "Too many attempts. Wait a moment and try again."
-    case .network: "Couldn't reach Żabka. Check your connection."
-    case .unexpectedResponse: "Żabka sent back something unexpected. Sign-in may have changed."
+    case .invalidPhone: String(localized: "Enter a 9-digit Polish phone number.")
+    case .wrongCode: String(localized: "That code didn't work. Check the SMS and try again.")
+    case .tooManyAttempts: String(localized: "Too many attempts. Wait a moment and try again.")
+    case .network: String(localized: "Couldn't reach Żabka. Check your connection.")
+    case .unexpectedResponse: String(localized: "Żabka sent back something unexpected. Sign-in may have changed.")
     }
   }
 }

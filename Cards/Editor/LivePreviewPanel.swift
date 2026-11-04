@@ -18,7 +18,13 @@ struct LivePreviewPanel: View {
   enum Wallpaper: String, CaseIterable, Identifiable {
     case light, dark, colourful
     var id: String { rawValue }
-    var label: String { rawValue.capitalized }
+    var label: String {
+      switch self {
+      case .light: String(localized: "Light")
+      case .dark: String(localized: "Dark")
+      case .colourful: String(localized: "Colourful")
+      }
+    }
   }
 
   let draft: EditorDraft
@@ -104,7 +110,7 @@ struct LivePreviewPanel: View {
       } label: {
         Image(systemName: expanded ? "chevron.up" : "chevron.down")
       }
-      .accessibilityLabel(expanded ? "Collapse preview" : "Expand preview")
+      .accessibilityLabel(expanded ? Text("Collapse preview") : Text("Expand preview"))
     }
   }
 }

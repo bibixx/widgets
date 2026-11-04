@@ -1,0 +1,1350 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "" : {
+      "shouldTranslate" : false
+    },
+    "%@" : {
+      "shouldTranslate" : false
+    },
+    "%@ card, %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ card, %2$@"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Karta %1$@, %2$@"
+          }
+        }
+      }
+    },
+    "%@ card, rotating code" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Karta %@, zmienny kod"
+          }
+        }
+      }
+    },
+    "%@ logo" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Logo %@"
+          }
+        }
+      }
+    },
+    "%@ needs %lld or %lld digits" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ needs %2$lld or %3$lld digits"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ wymaga %2$lld lub %3$lld cyfr"
+          }
+        }
+      }
+    },
+    "%@ takes digits only" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ przyjmuje tylko cyfry"
+          }
+        }
+      }
+    },
+    "+48" : {
+      "shouldTranslate" : false
+    },
+    "2D" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "2D"
+          }
+        }
+      }
+    },
+    "Add card" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dodaj kartę"
+          }
+        }
+      }
+    },
+    "Add the card number" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dodaj numer karty"
+          }
+        }
+      }
+    },
+    "Add your first card" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dodaj pierwszą kartę"
+          }
+        }
+      }
+    },
+    "Add your Żappka User ID" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dodaj User ID Żappka"
+          }
+        }
+      }
+    },
+    "Add your Żappka secret" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dodaj sekret Żappka"
+          }
+        }
+      }
+    },
+    "Barcode" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kod kreskowy"
+          }
+        }
+      }
+    },
+    "Can't draw this code" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nie można narysować tego kodu"
+          }
+        }
+      }
+    },
+    "Can't encode this: %@" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nie można tego zakodować: %@"
+          }
+        }
+      }
+    },
+    "Cancel" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anuluj"
+          }
+        }
+      }
+    },
+    "Card" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Karta"
+          }
+        }
+      }
+    },
+    "Card name" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nazwa karty"
+          }
+        }
+      }
+    },
+    "Card not found" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nie znaleziono karty"
+          }
+        }
+      }
+    },
+    "Card number" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Numer karty"
+          }
+        }
+      }
+    },
+    "Card removed — edit widget" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Karta usunięta — edytuj widżet"
+          }
+        }
+      }
+    },
+    "Cards" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Karty"
+          }
+        }
+      }
+    },
+    "Change Number" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zmień numer"
+          }
+        }
+      }
+    },
+    "Check digit added: %lld" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dodano cyfrę kontrolną: %lld"
+          }
+        }
+      }
+    },
+    "Check digit is wrong" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Błędna cyfra kontrolna"
+          }
+        }
+      }
+    },
+    "Choose Photo" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wybierz zdjęcie"
+          }
+        }
+      }
+    },
+    "Choose card" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wybierz kartę"
+          }
+        }
+      }
+    },
+    "Clear" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Przezroczysty"
+          }
+        }
+      }
+    },
+    "Codabar allows 0–9 and - $ : / . + (optional A–D start/stop)" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Codabar dopuszcza 0–9 oraz - $ : / . + (opcjonalnie A–D na początku i końcu)"
+          }
+        }
+      }
+    },
+    "Code" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kod"
+          }
+        }
+      }
+    },
+    "Code 39 allows A–Z, 0–9 and - . $ / + % space" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Code 39 dopuszcza A–Z, 0–9 oraz - . $ / + % i spację"
+          }
+        }
+      }
+    },
+    "Code 93 takes ASCII characters only" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Code 93 przyjmuje tylko znaki ASCII"
+          }
+        }
+      }
+    },
+    "Collapse preview" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zwiń podgląd"
+          }
+        }
+      }
+    },
+    "Colourful" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kolorowa"
+          }
+        }
+      }
+    },
+    "Colours" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kolory"
+          }
+        }
+      }
+    },
+    "Colours must be #RRGGBB" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kolory muszą mieć format #RRGGBB"
+          }
+        }
+      }
+    },
+    "Confirm with the SMS code" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Potwierdź kodem z SMS-a"
+          }
+        }
+      }
+    },
+    "Couldn't open that photo." : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nie udało się otworzyć tego zdjęcia."
+          }
+        }
+      }
+    },
+    "Couldn't reach Żabka. Check your connection." : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nie udało się połączyć z aplikacją Żappka. Sprawdź internet."
+          }
+        }
+      }
+    },
+    "Couldn't read a code" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nie udało się odczytać kodu"
+          }
+        }
+      }
+    },
+    "Couldn't read that image" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nie udało się odczytać tego obrazu"
+          }
+        }
+      }
+    },
+    "Couldn't save" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nie udało się zapisać"
+          }
+        }
+      }
+    },
+    "Custom" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Własna"
+          }
+        }
+      }
+    },
+    "Custom logo" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Własne logo"
+          }
+        }
+      }
+    },
+    "Dark" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ciemna"
+          }
+        }
+      }
+    },
+    "Debug: manual entry" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Debug: ręczne wpisywanie"
+          }
+        }
+      }
+    },
+    "Delete" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usuń"
+          }
+        }
+      }
+    },
+    "Delete %@?" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usunąć %@?"
+          }
+        }
+      }
+    },
+    "Didn't get the code?" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kod nie dotarł?"
+          }
+        }
+      }
+    },
+    "Drop to read the code" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Upuść, aby odczytać kod"
+          }
+        }
+      }
+    },
+    "Drop to read the Żappka code" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Upuść, aby odczytać kod Żappka"
+          }
+        }
+      }
+    },
+    "Edit Card" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edytuj kartę"
+          }
+        }
+      }
+    },
+    "Enter a 9-digit Polish phone number." : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wpisz 9-cyfrowy polski numer telefonu."
+          }
+        }
+      }
+    },
+    "Enter card number" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wpisz numer karty"
+          }
+        }
+      }
+    },
+    "Enter the 6-digit code we texted to +48 %@." : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wpisz 6-cyfrowy kod, który otrzymasz SMS-em na numer +48 %@."
+          }
+        }
+      }
+    },
+    "Enter your User ID" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wpisz swój User ID"
+          }
+        }
+      }
+    },
+    "Enter your secret" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wpisz swój sekret"
+          }
+        }
+      }
+    },
+    "Expand preview" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rozwiń podgląd"
+          }
+        }
+      }
+    },
+    "Files" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pliki"
+          }
+        }
+      }
+    },
+    "From (top)" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Od (góra)"
+          }
+        }
+      }
+    },
+    "Full colour" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pełny kolor"
+          }
+        }
+      }
+    },
+    "Hide secret" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ukryj sekret"
+          }
+        }
+      }
+    },
+    "Horizontal" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Poziomy"
+          }
+        }
+      }
+    },
+    "ITF needs an even number of digits" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ITF wymaga parzystej liczby cyfr"
+          }
+        }
+      }
+    },
+    "ITF takes digits only" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ITF przyjmuje tylko cyfry"
+          }
+        }
+      }
+    },
+    "Import card number" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importuj numer karty"
+          }
+        }
+      }
+    },
+    "Light" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jasna"
+          }
+        }
+      }
+    },
+    "Linear" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Liniowe"
+          }
+        }
+      }
+    },
+    "Link" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Link"
+          }
+        }
+      }
+    },
+    "Logo" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Logo"
+          }
+        }
+      }
+    },
+    "Lowercase letters will be uppercased" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Małe litery zostaną zamienione na wielkie"
+          }
+        }
+      }
+    },
+    "Loyalty card" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Karta lojalnościowa"
+          }
+        }
+      }
+    },
+    "Name" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nazwa"
+          }
+        }
+      }
+    },
+    "New Card" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nowa karta"
+          }
+        }
+      }
+    },
+    "No barcode found. Try an image where the whole code is visible." : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nie znaleziono kodu. Spróbuj z obrazem, na którym widać cały kod."
+          }
+        }
+      }
+    },
+    "No logo" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bez logo"
+          }
+        }
+      }
+    },
+    "Non-ASCII characters may not scan everywhere" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Znaki spoza ASCII mogą nie wszędzie się zeskanować"
+          }
+        }
+      }
+    },
+    "Not a link" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "To nie jest link"
+          }
+        }
+      }
+    },
+    "OK" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        }
+      }
+    },
+    "Open Card Link" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otwórz link karty"
+          }
+        }
+      }
+    },
+    "Open Cards to add a card" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otwórz aplikację, aby dodać kartę"
+          }
+        }
+      }
+    },
+    "Phone number" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Numer telefonu"
+          }
+        }
+      }
+    },
+    "Photos" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zdjęcia"
+          }
+        }
+      }
+    },
+    "Pick a store to start. You can change everything in the editor." : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Na początek wybierz sklep. Wszystko zmienisz potem w edytorze."
+          }
+        }
+      }
+    },
+    "Pick which card this widget shows." : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wybierz kartę, którą pokazuje ten widżet."
+          }
+        }
+      }
+    },
+    "Preset" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Szablony"
+          }
+        }
+      }
+    },
+    "Preview style" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Styl podglądu"
+          }
+        }
+      }
+    },
+    "QR Code" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kod QR"
+          }
+        }
+      }
+    },
+    "Rendering" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wyświetlanie"
+          }
+        }
+      }
+    },
+    "Reset to preset" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Domyślne z szablonu"
+          }
+        }
+      }
+    },
+    "Sample" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Przykład"
+          }
+        }
+      }
+    },
+    "Save" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zapisz"
+          }
+        }
+      }
+    },
+    "Scan with Camera" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skanuj aparatem"
+          }
+        }
+      }
+    },
+    "Secret" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sekret"
+          }
+        }
+      }
+    },
+    "Send Code" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wyślij kod"
+          }
+        }
+      }
+    },
+    "Send again" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wyślij ponownie"
+          }
+        }
+      }
+    },
+    "Show number under code" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pokaż numer pod kodem"
+          }
+        }
+      }
+    },
+    "Show secret" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pokaż sekret"
+          }
+        }
+      }
+    },
+    "Shows a card's barcode." : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pokazuje kod kreskowy karty."
+          }
+        }
+      }
+    },
+    "Sign In" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zaloguj się"
+          }
+        }
+      }
+    },
+    "Sign Out" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wyloguj się"
+          }
+        }
+      }
+    },
+    "Sign in with Żabka" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Logowanie kontem Żabka"
+          }
+        }
+      }
+    },
+    "Sign in with Żabka…" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zaloguj się kontem Żabka…"
+          }
+        }
+      }
+    },
+    "Signed in as" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zalogowano jako"
+          }
+        }
+      }
+    },
+    "Size" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rozmiar"
+          }
+        }
+      }
+    },
+    "Square" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kwadratowy"
+          }
+        }
+      }
+    },
+    "Stacked" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Piętrowe"
+          }
+        }
+      }
+    },
+    "Swap" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odwróć"
+          }
+        }
+      }
+    },
+    "Tapping the widget opens this link, e.g. the store's app. Leave empty to open the card here." : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stuknięcie widżetu otwiera ten link, np. aplikację sklepu. Zostaw puste, aby otwierać aplikację punktuj.se."
+          }
+        }
+      }
+    },
+    "That code didn't work. Check the SMS and try again." : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ten kod nie zadziałał. Sprawdź SMS i spróbuj ponownie."
+          }
+        }
+      }
+    },
+    "That code isn't a Żappka code." : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "To nie jest kod Żappka."
+          }
+        }
+      }
+    },
+    "The User ID usually contains only letters, digits, - and _" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "User ID zwykle zawiera tylko litery, cyfry, - i _"
+          }
+        }
+      }
+    },
+    "The secret must be hexadecimal (0–9, a–f)" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sekret musi być szesnastkowy (0–9, a–f)"
+          }
+        }
+      }
+    },
+    "The secret must have an even number of characters" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sekret musi mieć parzystą liczbę znaków"
+          }
+        }
+      }
+    },
+    "This secret looks short — double-check it" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ten sekret wygląda na za krótki — sprawdź go"
+          }
+        }
+      }
+    },
+    "Tinted" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Barwiony"
+          }
+        }
+      }
+    },
+    "To (bottom)" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Do (dół)"
+          }
+        }
+      }
+    },
+    "Too many attempts. Wait a moment and try again." : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Za dużo prób. Odczekaj chwilę i spróbuj ponownie."
+          }
+        }
+      }
+    },
+    "Try" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wypróbuj"
+          }
+        }
+      }
+    },
+    "UPC-E must start with 0 or 1" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "UPC-E musi zaczynać się od 0 lub 1"
+          }
+        }
+      }
+    },
+    "UPC-E needs 7 or 8 digits" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "UPC-E wymaga 7 lub 8 cyfr"
+          }
+        }
+      }
+    },
+    "UPC-E takes digits only" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "UPC-E przyjmuje tylko cyfry"
+          }
+        }
+      }
+    },
+    "Use the number of your Żabka account. You'll get an SMS code. Cards keeps only the secret behind your Żappka code, never your login." : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Numer telefonu powiązany z Twoim kontem Żabka. W następnym kroku podaj kod potwierdzający."
+          }
+        }
+      }
+    },
+    "User ID" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "User ID"
+          }
+        }
+      }
+    },
+    "Wait %lld s" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odczekaj %lld s"
+          }
+        }
+      }
+    },
+    "Wallpaper" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tapeta"
+          }
+        }
+      }
+    },
+    "Which code?" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Który kod?"
+          }
+        }
+      }
+    },
+    "White artwork on a transparent background looks best on the header." : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Na nagłówku najlepiej wygląda białe logo na przezroczystym tle."
+          }
+        }
+      }
+    },
+    "Widget tap" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stuknięcie widżetu"
+          }
+        }
+      }
+    },
+    "Widgets showing this card will ask you to pick another one." : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Widżety z tą kartą poproszą o wybranie innej."
+          }
+        }
+      }
+    },
+    "card" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "kartę"
+          }
+        }
+      }
+    },
+    "zappka://, https://…" : {
+      "shouldTranslate" : false
+    },
+    "Żabka sent back something unexpected. Sign-in may have changed." : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aplikacja Żappka zwróciła nieoczekiwaną odpowiedź. Logowanie mogło się zmienić."
+          }
+        }
+      }
+    },
+    "Żappka account" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Konto Żappka"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

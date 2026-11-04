@@ -21,7 +21,7 @@ enum BarcodeError: LocalizedError, Equatable {
   var errorDescription: String? {
     switch self {
     case .invalid(let message): message
-    case .encodingFailed(let message): "Can't encode this: \(message)"
+    case .encodingFailed(let message): String(localized: "Can't encode this: \(message)")
     }
   }
 }
@@ -37,7 +37,7 @@ enum BarcodeRenderer {
     if let cached = cache.object(forKey: key) { return cached.image }
 
     let content = BarcodeValidation.normalized(text, for: symbology)
-    guard !content.isEmpty else { throw BarcodeError.invalid("Enter card number") }
+    guard !content.isEmpty else { throw BarcodeError.invalid(String(localized: "Enter card number")) }
 
     let options = ZXIWriterOptions(format: symbology.zxingFormat, width: 0, height: 0, ecLevel: -1, margin: 0)
     let writer = ZXIBarcodeWriter(options: options)

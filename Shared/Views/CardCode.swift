@@ -11,7 +11,7 @@ enum CardCode: Equatable {
     switch card.content {
     case .raw(let raw):
       if raw.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-        guard card.isPreview else { return .problem(symbol: "barcode", message: "Add the card number") }
+        guard card.isPreview else { return .problem(symbol: "barcode", message: String(localized: "Add the card number")) }
         return code(symbology.placeholder, card, isSample: true)
       }
       let result = BarcodeValidation.validate(raw, for: symbology)
@@ -19,10 +19,10 @@ enum CardCode: Equatable {
       return code(BarcodeValidation.normalized(raw, for: symbology), card, isSample: false)
 
     case .zappka:
-      guard let creds = card.zappkaCredentials else { return .problem(symbol: "key", message: "Add your Żappka secret") }
-      guard !creds.userId.isEmpty else { return .problem(symbol: "person", message: "Add your Żappka User ID") }
+      guard let creds = card.zappkaCredentials else { return .problem(symbol: "key", message: String(localized: "Add your Żappka secret")) }
+      guard !creds.userId.isEmpty else { return .problem(symbol: "person", message: String(localized: "Add your Żappka User ID")) }
       guard let payload = Zappka.payload(for: creds, at: date) else {
-        return .problem(symbol: "key", message: "Add your Żappka secret")
+        return .problem(symbol: "key", message: String(localized: "Add your Żappka secret"))
       }
       return .code(text: payload, caption: nil, isSample: false)
     }

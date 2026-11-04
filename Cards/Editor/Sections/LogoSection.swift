@@ -81,7 +81,7 @@ struct LogoSection: View {
 
   private func setCustomLogo(_ data: Data?) {
     guard let data, let png = LogoImport.downscaledPNG(data) else {
-      loadError = "Couldn't read that image"
+      loadError = String(localized: "Couldn't read that image")
       return
     }
     loadError = nil

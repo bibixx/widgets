@@ -20,7 +20,7 @@ struct TapSection: View {
         }
       }
       if draft.tapLink == .invalid {
-        FieldMessage(text: "Not a link", isError: true)
+        FieldMessage(text: String(localized: "Not a link"), isError: true)
       }
     } header: {
       Text("Widget tap")
