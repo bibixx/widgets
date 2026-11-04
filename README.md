@@ -25,6 +25,7 @@ Debug launch arguments: `-seed-samples` fills an empty store with made-up cards,
 - `CardsWidget/` widget extension: card picker, timelines
 - `Shared/` compiled into both: model, storage, barcode engine (zxing-cpp), TOTP/Żappka, `CardView`
 - `docs/presets.md`: how to add a store preset
+- `docs/publishing.md`: how to ship a build to TestFlight
 
 ## Where data lives
 
