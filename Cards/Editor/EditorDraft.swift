@@ -85,6 +85,18 @@ final class EditorDraft {
     rawData = code.text
   }
 
+  /// Fills the Żappka fields from a sign-in, replacing what was there.
+  func apply(_ credentials: ZappkaCredentials) {
+    zappkaUserId = credentials.userId
+    zappkaSecret = credentials.secretHex
+  }
+
+  /// Forgets the Żappka credentials; Save then removes the Keychain secret.
+  func signOutOfZappka() {
+    zappkaUserId = ""
+    zappkaSecret = ""
+  }
+
   func resetColorsToPreset() {
     guard let preset else { return }
     color1Hex = preset.color1Hex

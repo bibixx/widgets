@@ -1,7 +1,7 @@
 # Cards
 
 Loyalty-card barcodes as native iOS Home Screen widgets, including Żappka's rotating code.
-SwiftUI app + WidgetKit extension, iOS 26, no server.
+SwiftUI app + WidgetKit extension, iOS 26, no server of its own.
 
 ## Build
 
@@ -32,3 +32,7 @@ Debug launch arguments: `-seed-samples` fills an empty store with made-up cards,
 - Cards: SwiftData store in the App Group container (`group.io.legiec.cards`), shared with the widget.
 - Żappka secrets: the Keychain (shared access group, this device only, readable after first unlock).
   Never in the database, never logged. Tests use made-up secrets.
+- Żabka sign-in: "Sign in with Żabka" in the editor is the only network traffic. It talks to
+  Google Identity Toolkit and `*.spapp.zabka.pl` the way the official app does (flow from
+  [iGerman00/zabka-totp-webapp](https://github.com/iGerman00/zabka-totp-webapp)), keeps only the
+  User ID and code secret, and never stores the login tokens.

@@ -7,6 +7,10 @@ struct ContentSection: View {
   @Bindable var draft: EditorDraft
   let importer: CodeImporter
   @State private var revealsSecret = false
+  @State private var signingIn = false
+  /// Revealed by tapping the "Żappka account" header five times in quick succession.
+  @State private var showsManualEntry = false
+  @State private var headerTaps: [Date] = []
   @State private var scanning = false
   @State private var pickingPhoto = false
   @State private var photo: PhotosPickerItem?
@@ -18,8 +22,22 @@ struct ContentSection: View {
       case .zappka: zappka
       }
     } header: {
-      Text(draft.contentKind == .zappka ? "Żappka account" : "Card number")
+      if draft.contentKind == .zappka {
+        Text("Żappka account")
+          .contentShape(.rect)
+          .onTapGesture(perform: countHeaderTap)
+      } else {
+        Text("Card number")
+      }
     }
+  }
+
+  private func countHeaderTap() {
+    let now = Date.now
+    headerTaps = headerTaps.filter { now.timeIntervalSince($0) < 2 } + [now]
+    guard headerTaps.count >= 5 else { return }
+    headerTaps = []
+    withAnimation { showsManualEntry.toggle() }
   }
 
   @ViewBuilder private var raw: some View {
@@ -57,6 +75,33 @@ struct ContentSection: View {
   }
 
   @ViewBuilder private var zappka: some View {
+    let userId = draft.zappkaUserId.trimmingCharacters(in: .whitespacesAndNewlines)
+    if !userId.isEmpty && !draft.zappkaSecret.isEmpty {
+      LabeledContent("Signed in as") {
+        Text(userId).font(.body.monospaced()).lineLimit(1).truncationMode(.middle)
+      }
+      // Settings-style: centered red text, no icon.
+      Button(role: .destructive) {
+        draft.signOutOfZappka()
+      } label: {
+        Text("Sign Out").frame(maxWidth: .infinity)
+      }
+    } else {
+      Button("Sign in with Żabka…", systemImage: "person.badge.key") { signingIn = true }
+        .sheet(isPresented: $signingIn) {
+          ZappkaLoginSheet { draft.apply($0) }
+        }
+    }
+    if showsManualEntry {
+      manualZappkaFields
+    }
+    ForEach(visibleIssues, id: \.self) { issue in
+      FieldMessage(text: issue.message, isError: issue.isError)
+    }
+  }
+
+  /// Hidden debug panel: see what sign-in fetched, or type credentials in by hand.
+  @ViewBuilder private var manualZappkaFields: some View {
     TextField("User ID", text: $draft.zappkaUserId)
       .textInputAutocapitalization(.never)
       .autocorrectionDisabled()
@@ -80,15 +125,17 @@ struct ContentSection: View {
       .buttonStyle(.borderless)
       .accessibilityLabel(revealsSecret ? "Hide secret" : "Show secret")
     }
-    ForEach(visibleIssues, id: \.self) { issue in
-      FieldMessage(text: issue.message, isError: issue.isError)
-    }
+    Text("Debug: manual entry")
+      .font(.footnote)
+      .foregroundStyle(.secondary)
   }
 
-  /// Don't nag about empty fields before anything is typed.
+  /// Don't nag about empty fields before anything is typed. Without the debug panel there are
+  /// no fields to type in, so missing ones aren't shown at all (the sign-in button is the hint).
   private var visibleIssues: [ZappkaCredentials.Issue] {
     draft.credentialIssues.filter { issue in
-      switch issue {
+      if !showsManualEntry, issue == .missingUserId || issue == .missingSecret { return false }
+      return switch issue {
       case .missingUserId: !draft.zappkaSecret.isEmpty
       case .missingSecret: !draft.zappkaUserId.isEmpty
       default: true

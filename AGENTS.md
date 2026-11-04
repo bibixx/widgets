@@ -3,7 +3,7 @@
 This file provides guidance to coding agents working with code in this repository.
 
 Cards: loyalty-card barcodes as iOS Home Screen widgets, including Żappka's rotating (TOTP) code.
-SwiftUI app + WidgetKit extension, iOS 26, Swift 6 with complete strict concurrency, no server.
+SwiftUI app + WidgetKit extension, iOS 26, Swift 6 with complete strict concurrency, no server of its own.
 
 ## Commands
 
@@ -45,6 +45,15 @@ a new `VersionedSchema` plus a stage in `CardsMigrationPlan`. Views and widget e
 (`group.io.legiec.cards`); the app writes, the widget only reads. Żappka secrets live only in the
 Keychain (`SecretStore`, shared access group, keyed by card id), never in SwiftData and never
 logged. Tests and fixtures use made-up secrets and numbers.
+
+**Żabka sign-in.** `Cards/ZappkaLogin/` (app only, not `Shared/`): `ZappkaLoginClient` runs
+the official app's phone + SMS flow (anonymous Firebase user → `SendCode` → `SignIn` →
+`verifyCustomToken` → `QRCode`) and returns `ZappkaCredentials`; `ZappkaLoginSheet` is its UI and
+hands the result to `EditorDraft.apply(_:)`. The `ZappkaAPI` constants mimic Żabka's iOS client
+(source: iGerman00/zabka-totp-webapp's `login-for-secrets.py`, check it first when sign-in
+breaks). Tokens are never persisted, `paySecret` is ignored, and tests use a stubbed transport and
+never touch the network. The manual User ID / Secret fields are a hidden debug panel (any build), toggled by tapping the
+"Żappka account" header five times within two seconds.
 
 **Rendering.** `CardView` is the single visual used by the widget, the card list and the editor's
 live preview. Rules that span files:
