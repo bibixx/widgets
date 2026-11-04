@@ -1,7 +1,8 @@
 # Publishing to TestFlight
 
 Cards goes out through TestFlight, either to the internal "Me" group or by public link. The App Store Connect record is
-"Cards — Loyalty Widgets", bundle ID `io.legiec.cards`. The home-screen label stays "Cards".
+"Cards — Loyalty Widgets", bundle ID `io.legiec.cards`. The home-screen and widget-gallery label is
+"punktuj.se".
 
 Signing is automatic, and the team ID comes from the environment (never commit it).
 
@@ -82,6 +83,8 @@ Here for reference, or for a new machine or account.
   English (U.K.) to match the app's British spelling).
 - `ITSAppUsesNonExemptEncryption: false` in the app's Info.plist (in `project.yml`), so builds skip
   the export-compliance question.
+- Unique bundle names: "Cards" is taken, and ITMS-90129 checks both `CFBundleName` and
+  `CFBundleDisplayName`, on the widget too. App name `Cards — Loyalty Widgets`, label `punktuj.se`.
 - `TARGETED_DEVICE_FAMILY: "1"` set **per target** in `project.yml`. XcodeGen's iOS preset sets
   `"1,2"` on each target, which overrides a project-level value.
 
@@ -93,6 +96,7 @@ Here for reference, or for a new machine or account.
 | `No profiles for 'io.legiec.cards' were found` | Usually follows the error above. Also check `-allowProvisioningUpdates` is passed and Xcode is signed in. |
 | `exportArchive Copy failed` (logs show `rsync error: syntax or usage error`) | Homebrew's rsync 3.x is ahead of `/usr/bin` in `PATH`. Run the export with `export PATH="/usr/bin:$PATH"`. |
 | `Invalid bundle … you need to include all of the … orientations to support iPad multitasking` | The build came out as an iPad app. Check `TARGETED_DEVICE_FAMILY = 1` with `xcodebuild -showBuildSettings`; it must be set per target. |
+| Email: `ITMS-90129: The bundle uses a bundle name or display name that is already taken` | Another App Store app already uses one of the names. Change `CFBundleName` and/or `CFBundleDisplayName` (app and widget), bump the build, upload again. The upload itself succeeds; this only arrives by email. |
 | Upload rejected: build number already used | Bump `CURRENT_PROJECT_VERSION`. |
 | Build stuck at **Missing Compliance** | `ITSAppUsesNonExemptEncryption` is missing from the built Info.plist. For this build, click Manage and choose "None of the algorithms mentioned". |
 | Build never appears, no email after ~30 min | Check the account holder's email for `ITMS-` messages. The distribution logs path is printed by `-exportArchive`. |
