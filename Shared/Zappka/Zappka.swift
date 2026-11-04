@@ -6,6 +6,8 @@ enum Zappka {
   static let squareSymbology: Symbology = .qr
   static let host = "srln.pl"
   static let period: TimeInterval = 30
+  /// Drawn faded in the editor preview until the card is signed in.
+  static let samplePayload = payload(userId: "000000000", code: "000000")
 
   /// "505968488" → "505 968 488".
   static func formatPhone(_ digits: String) -> String {

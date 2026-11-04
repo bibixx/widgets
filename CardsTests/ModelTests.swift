@@ -92,6 +92,15 @@ struct ModelTests {
     #expect(Color(hex: "#01b15b").hexString == "#01b15b")
     #expect(Color.rgb(hex: "nope") == nil)
   }
+
+  @Test func zappkaWithoutSignInShowsSampleOnlyInPreview() {
+    var card = CardSnapshot(
+      name: "Żabka", symbology: .pdf417, content: .zappka(userId: ""),
+      color1Hex: "#000000", color2Hex: "#000000", logo: .none)
+    guard case .problem = CardCode.resolve(card, at: .now) else { Issue.record("expected a problem"); return }
+    card.isPreview = true
+    #expect(CardCode.resolve(card, at: .now) == .code(text: Zappka.samplePayload, caption: nil, isSample: true))
+  }
 }
 
 struct SecretStoreTests {
