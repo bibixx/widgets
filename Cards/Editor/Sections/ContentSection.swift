@@ -78,7 +78,11 @@ struct ContentSection: View {
     let userId = draft.zappkaUserId.trimmingCharacters(in: .whitespacesAndNewlines)
     if !userId.isEmpty && !draft.zappkaSecret.isEmpty {
       LabeledContent("Signed in as") {
-        Text(userId).font(.body.monospaced()).lineLimit(1).truncationMode(.middle)
+        if draft.zappkaPhone.isEmpty {
+          Text(userId).font(.body.monospaced()).lineLimit(1).truncationMode(.middle)
+        } else {
+          Text(verbatim: "+48 \(Zappka.formatPhone(draft.zappkaPhone))").monospacedDigit()
+        }
       }
       // Settings-style: centered red text, no icon.
       Button(role: .destructive) {
@@ -89,7 +93,7 @@ struct ContentSection: View {
     } else {
       Button("Sign in with Żabka…", systemImage: "person.badge.key") { signingIn = true }
         .sheet(isPresented: $signingIn) {
-          ZappkaLoginSheet { draft.apply($0) }
+          ZappkaLoginSheet { draft.apply($0, phone: $1) }
         }
     }
     if showsManualEntry {

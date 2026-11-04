@@ -19,6 +19,8 @@ final class CodeImporter {
         failure = codes.isEmpty ? Self.noCode : String(localized: "That code isn't a Żappka code.")
         return
       }
+      // A different account's code: the stored sign-in number no longer describes it.
+      if userId != draft.zappkaUserId { draft.zappkaPhone = "" }
       draft.zappkaUserId = userId
       return
     }

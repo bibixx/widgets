@@ -7,7 +7,7 @@ enum SharedStore {
   /// The app and the widget open the same SQLite file in the App Group container.
   /// The widget only fetches, never writes.
   static func makeContainer(inMemory: Bool = false) throws -> ModelContainer {
-    let schema = Schema(versionedSchema: CardsSchemaV1.self)
+    let schema = Schema(versionedSchema: CardsSchemaV2.self)
     let configuration = inMemory
       ? ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
       : ModelConfiguration(schema: schema, url: try storeURL())

@@ -62,6 +62,53 @@ struct EditorDraftTests {
     #expect(try secrets.zappkaSecret(for: card.id) == CardPreviewFixtures.fakeZappkaSecret)
   }
 
+  @Test func zappkaSignInPhoneLabelsTheCard() throws {
+    let container = try SharedStore.makeContainer(inMemory: true)
+    let context = container.mainContext
+    let draft = EditorDraft(preset: Presets.zappka)
+    draft.apply(ZappkaCredentials(userId: "TestUser_1", secretHex: CardPreviewFixtures.fakeZappkaSecret), phone: "600700800")
+    let card = try draft.save(in: context, secrets: secrets)
+    defer { try? secrets.setZappkaSecret(nil, for: card.id) }
+
+    #expect(card.zappkaPhone == "600700800")
+    #expect(card.zappkaAccountLabel == "+48 600 700 800")
+    #expect(EditorDraft(card: card, secret: nil).zappkaPhone == "600700800")
+
+    // Credentials from anywhere else drop the number; the label falls back to the User ID.
+    draft.apply(ZappkaCredentials(userId: "TestUser_2", secretHex: CardPreviewFixtures.fakeZappkaSecret))
+    try draft.save(in: context, secrets: secrets)
+    #expect(card.zappkaPhone == nil)
+    #expect(card.zappkaAccountLabel == "TestUser_2")
+  }
+
+  /// A store written by builds 1–3 (schema V1) opens under V2 with its cards intact.
+  @Test func v1StoreMigratesToV2() throws {
+    let url = FileManager.default.temporaryDirectory
+      .appending(path: "cards-migration-\(UUID().uuidString)/Cards.store")
+    try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
+    defer { try? FileManager.default.removeItem(at: url.deletingLastPathComponent()) }
+    let id = UUID()
+    do {
+      let schema = Schema(versionedSchema: CardsSchemaV1.self)
+      let container = try ModelContainer(for: schema, configurations: [ModelConfiguration(schema: schema, url: url)])
+      let old = CardsSchemaV1.Card(id: id, createdAt: .now)
+      old.name = "Old"
+      old.zappkaUserId = "TestUser_1"
+      container.mainContext.insert(old)
+      try container.mainContext.save()
+    }
+
+    let schema = Schema(versionedSchema: CardsSchemaV2.self)
+    let container = try ModelContainer(
+      for: schema, migrationPlan: CardsMigrationPlan.self,
+      configurations: [ModelConfiguration(schema: schema, url: url)])
+    let cards = try container.mainContext.fetch(FetchDescriptor<Card>())
+    #expect(cards.map(\.id) == [id])
+    #expect(cards.first?.name == "Old")
+    #expect(cards.first?.zappkaPhone == nil)
+    #expect(cards.first?.zappkaAccountLabel == "TestUser_1")
+  }
+
   @Test func cancelChangesNothing() throws {
     let container = try SharedStore.makeContainer(inMemory: true)
     let context = container.mainContext

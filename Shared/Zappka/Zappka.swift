@@ -7,6 +7,13 @@ enum Zappka {
   static let host = "srln.pl"
   static let period: TimeInterval = 30
 
+  /// "505968488" → "505 968 488".
+  static func formatPhone(_ digits: String) -> String {
+    stride(from: 0, to: digits.count, by: 3)
+      .map { String(digits.dropFirst($0).prefix(3)) }
+      .joined(separator: " ")
+  }
+
   /// The userId is interpolated as-is (not percent-encoded): that's the form the till accepts.
   static func payload(userId: String, code: String) -> String {
     "https://\(host)/view/dashboard?ploy=\(userId)&loyal=\(code)"

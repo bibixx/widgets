@@ -84,13 +84,6 @@ struct ZappkaLoginClient: Sendable {
     return raw
   }
 
-  /// "505968488" → "505 968 488".
-  static func formatPhone(_ digits: String) -> String {
-    stride(from: 0, to: digits.count, by: 3)
-      .map { String(digits.dropFirst($0).prefix(3)) }
-      .joined(separator: " ")
-  }
-
   /// Bidi marks and other invisible format characters (Unicode Cf) that autofill can add.
   private static func isInvisibleFormat(_ character: Character) -> Bool {
     character.unicodeScalars.allSatisfy { $0.properties.generalCategory == .format }

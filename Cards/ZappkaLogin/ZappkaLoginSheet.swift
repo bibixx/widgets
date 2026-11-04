@@ -76,9 +76,9 @@ final class ZappkaLoginModel {
   }
 }
 
-/// Phone number → SMS code → credentials handed to `onSignIn`.
+/// Phone number → SMS code → credentials and the national number handed to `onSignIn`.
 struct ZappkaLoginSheet: View {
-  let onSignIn: (ZappkaCredentials) -> Void
+  let onSignIn: (ZappkaCredentials, _ phone: String) -> Void
   @State private var model = ZappkaLoginModel()
   @Environment(\.dismiss) private var dismiss
   private enum Field { case phone, code }
@@ -155,7 +155,7 @@ struct ZappkaLoginSheet: View {
         VStack(alignment: .leading, spacing: 8) {
           Text("Confirm with the SMS code")
             .font(.title2.bold())
-          Text("Enter the 6-digit code you'll get by SMS at +48 \(ZappkaLoginClient.formatPhone(pending.phone)).")
+          Text("Enter the 6-digit code you'll get by SMS at +48 \(Zappka.formatPhone(pending.phone)).")
             .foregroundStyle(.secondary)
         }
         VStack(alignment: .leading, spacing: 12) {
@@ -192,8 +192,9 @@ struct ZappkaLoginSheet: View {
   }
 
   private func signIn() async {
-    guard model.canSignIn, let credentials = await model.signIn() else { return }
-    onSignIn(credentials)
+    guard model.canSignIn, case .code(let pending) = model.step,
+          let credentials = await model.signIn() else { return }
+    onSignIn(credentials, pending.phone)
     dismiss()
   }
 }

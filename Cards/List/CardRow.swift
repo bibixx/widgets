@@ -16,7 +16,7 @@ struct CardRow: View {
 
       VStack(alignment: .leading, spacing: 2) {
         Text(card.name).font(.headline)
-        Text(card.content.kind == .zappka ? card.zappkaUserId : card.rawData)
+        Text(card.content.kind == .zappka ? card.zappkaAccountLabel : card.rawData)
           .font(.subheadline.monospaced())
           .foregroundStyle(.secondary)
           .lineLimit(1)

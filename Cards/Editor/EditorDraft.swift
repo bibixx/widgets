@@ -17,6 +17,8 @@ final class EditorDraft {
   var rawData: String
   var zappkaUserId: String
   var zappkaSecret: String
+  /// National digits of the number used to sign in; empty when the credentials came from elsewhere.
+  var zappkaPhone: String
   var color1Hex: String
   var color2Hex: String
   var logo: CardLogo
@@ -35,6 +37,7 @@ final class EditorDraft {
     rawData = ""
     zappkaUserId = ""
     zappkaSecret = ""
+    zappkaPhone = ""
     color1Hex = preset.color1Hex
     color2Hex = preset.color2Hex
     logo = preset.logo
@@ -53,6 +56,7 @@ final class EditorDraft {
     rawData = card.rawData
     zappkaUserId = card.zappkaUserId
     zappkaSecret = secret ?? ""
+    zappkaPhone = card.zappkaPhone ?? ""
     color1Hex = card.color1Hex
     color2Hex = card.color2Hex
     logo = card.logo
@@ -86,15 +90,17 @@ final class EditorDraft {
   }
 
   /// Fills the Żappka fields from a sign-in, replacing what was there.
-  func apply(_ credentials: ZappkaCredentials) {
+  func apply(_ credentials: ZappkaCredentials, phone: String? = nil) {
     zappkaUserId = credentials.userId
     zappkaSecret = credentials.secretHex
+    zappkaPhone = phone ?? ""
   }
 
   /// Forgets the Żappka credentials; Save then removes the Keychain secret.
   func signOutOfZappka() {
     zappkaUserId = ""
     zappkaSecret = ""
+    zappkaPhone = ""
   }
 
   func resetColorsToPreset() {
@@ -175,6 +181,7 @@ final class EditorDraft {
     // Keep the other kind's field too, so switching kinds later doesn't lose it.
     card.rawData = BarcodeValidation.normalized(rawData, for: symbology)
     card.zappkaUserId = zappkaUserId.trimmingCharacters(in: .whitespacesAndNewlines)
+    card.zappkaPhone = zappkaPhone.isEmpty ? nil : zappkaPhone
     card.color1Hex = color1Hex
     card.color2Hex = color2Hex
     card.logo = logo

@@ -142,7 +142,7 @@ struct ZappkaLoginTests {
   }
 
   @Test func phoneFormatsInThrees() {
-    #expect(ZappkaLoginClient.formatPhone("505968488") == "505 968 488")
+    #expect(Zappka.formatPhone("505968488") == "505 968 488")
   }
 
   @Test(arguments: ["", "60070080", "6007008001", "60070080a", "+49600700800"])
@@ -158,8 +158,13 @@ struct ZappkaLoginTests {
     #expect(draft.zappkaSecret == "aabbccdd")
     #expect(draft.rawData == "123")
 
+    #expect(draft.zappkaPhone.isEmpty)
+
+    draft.apply(ZappkaCredentials(userId: "TestUser_1", secretHex: "AABBCCDD"), phone: "600700800")
+    #expect(draft.zappkaPhone == "600700800")
+
     draft.signOutOfZappka()
-    #expect(draft.zappkaUserId.isEmpty && draft.zappkaSecret.isEmpty)
+    #expect(draft.zappkaUserId.isEmpty && draft.zappkaSecret.isEmpty && draft.zappkaPhone.isEmpty)
     #expect(!draft.canSave, "a Żappka card needs credentials")
   }
 }

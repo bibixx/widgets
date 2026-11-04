@@ -24,7 +24,7 @@ struct CardEntity: AppEntity {
   init(card: Card) {
     self.init(
       id: card.id, name: card.name,
-      detail: card.content.kind == .zappka ? card.zappkaUserId : card.rawData)
+      detail: card.content.kind == .zappka ? card.zappkaAccountLabel : card.rawData)
   }
 }
 
