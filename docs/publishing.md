@@ -1,8 +1,7 @@
 # Publishing to TestFlight
 
-Cards goes out through TestFlight, either to the internal "Me" group or by public link. The App Store Connect record is
-"Cards — Loyalty Widgets", bundle ID `io.legiec.cards`. The home-screen and widget-gallery label is
-"punktuj.se".
+Cards goes out through TestFlight, either to the internal "Me" group or by public link. The App Store Connect record, the bundle name
+and the home-screen / widget-gallery label are all "punktuj.se"; bundle ID `io.legiec.cards`.
 
 Signing is automatic, and the team ID comes from the environment (never commit it).
 
@@ -84,7 +83,7 @@ Here for reference, or for a new machine or account.
 - `ITSAppUsesNonExemptEncryption: false` in the app's Info.plist (in `project.yml`), so builds skip
   the export-compliance question.
 - Unique bundle names: "Cards" is taken, and ITMS-90129 checks both `CFBundleName` and
-  `CFBundleDisplayName`, on the widget too. App name `Cards — Loyalty Widgets`, label `punktuj.se`.
+  `CFBundleDisplayName`, on the widget too. Both are `punktuj.se`.
 - `TARGETED_DEVICE_FAMILY: "1"` set **per target** in `project.yml`. XcodeGen's iOS preset sets
   `"1,2"` on each target, which overrides a project-level value.
 

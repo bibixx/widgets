@@ -45,7 +45,7 @@ targets:
       properties:
         # "Cards" is taken on the App Store (ITMS-90129), for both of these.
         CFBundleDisplayName: punktuj.se
-        CFBundleName: Cards — Loyalty Widgets
+        CFBundleName: punktuj.se
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         UILaunchScreen: {}
