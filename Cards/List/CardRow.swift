@@ -17,7 +17,8 @@ struct CardRow: View {
       VStack(alignment: .leading, spacing: 2) {
         Text(card.name).font(.headline)
         Text(card.content.kind == .zappka ? card.zappkaAccountLabel : card.rawData)
-          .font(.subheadline.monospaced())
+          // Żappka shows a phone number: SF Mono spaces read as gaps there.
+          .font(card.content.kind == .zappka ? .subheadline.monospacedDigit() : .subheadline.monospaced())
           .foregroundStyle(.secondary)
           .lineLimit(1)
           .truncationMode(.middle)
